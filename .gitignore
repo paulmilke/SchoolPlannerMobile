@@ -376,3 +376,60 @@ Directory.Build.Override.props
 
 # Only the "snapshots" directory should be added to Git, not the "snapshots-diff" directory
 snapshots-diff/
+
+# .NET MAUI / Xamarin / Visual Studio generated files
+bin/
+obj/
+*.userprefs
+*.suo
+*.sln.cache
+*.user
+*.suo
+*.userprefs
+*.sln.docstates
+
+# Android build output
+*.apk
+*.aab
+*.dex
+*.keystore
+*.jar
+*.class
+*.pro
+*.sbt
+*.log
+
+# iOS build output
+*.ipa
+*.app
+*.dSYM.zip
+*.dSYM
+*.dsym
+*.pkg
+*.framework
+
+# Build/ReSharper folders
+_ReSharper/
+.idea/
+
+# macOS-specific
+.DS_Store
+
+# Visual Studio files
+.vscode/
+.vs/
+
+# Rider IDE files
+.idea/
+.idea/
+
+# Rider, Visual Studio, and Xamarin temporary files
+.idea/
+__history/
+slnx/
+
+# NuGet
+packages/
+*.nupkg
+*.paket-files/
+*.paket.restore
