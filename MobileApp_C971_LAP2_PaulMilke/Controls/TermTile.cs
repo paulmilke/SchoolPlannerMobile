@@ -65,7 +65,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.Controls
             string action = await Application.Current.MainPage.DisplayActionSheet
                 (
                 "Options",
-                "Cancel",
+                "Close",
                 null,
                 "Edit",
                 "Details",
