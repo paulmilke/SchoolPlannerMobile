@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MobileApp_C971_LAP2_PaulMilke.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -9,6 +10,8 @@ namespace MobileApp_C971_LAP2_PaulMilke.Controls
 {
     internal class TermTile : Frame
     {
+        public event EventHandler TileClicked; 
+
         public TermTile(string title)
         {
 
@@ -56,10 +59,18 @@ namespace MobileApp_C971_LAP2_PaulMilke.Controls
             Grid.SetColumn(menuButton, 1);
             grid.Children.Add(menuButton);
 
-            Content = grid; 
+            Content = grid;
 
-           
+            var tapGesterRecognizer = new TapGestureRecognizer();
+            tapGesterRecognizer.Tapped += OnTileTapped;
+            this.GestureRecognizers.Add(tapGesterRecognizer);
         }
+
+        public void OnTileTapped(object sender, EventArgs e)
+        {
+            TileClicked?.Invoke(this, EventArgs.Empty);
+        }
+
         private async void ShowMenu()
         {
             string action = await Application.Current.MainPage.DisplayActionSheet
