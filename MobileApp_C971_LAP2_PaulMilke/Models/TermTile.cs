@@ -5,15 +5,33 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace MobileApp_C971_LAP2_PaulMilke.Controls
 {
-    internal class TermTile : Frame
+    public class TermTile : Frame
     {
-        public event EventHandler TileClicked; 
+        //public event EventHandler TileClicked;
+        public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Title), typeof(string), typeof(TermTile), default(string));
+        public static readonly BindableProperty TileCommandProperty = BindableProperty.Create(nameof(TileCommand), typeof(ICommand), typeof(TermTile), default(ICommand));
 
-        public TermTile(string title)
+        public string Title 
         {
+            get { return (string)GetValue(TitleProperty); } 
+            set { SetValue(TitleProperty, value); }
+        }
+
+        public ICommand TileCommand
+        {
+            get {  return(ICommand)GetValue(TileCommandProperty);}
+            set { SetValue(TileCommandProperty, value);}
+        }
+
+        public TermTile()
+        {
+            this.BorderColor = Color.FromRgb(0, 0, 0);
+            this.Padding = 10; 
+            this.Margin = 5;
 
             var grid = new Grid
             {
@@ -28,13 +46,14 @@ namespace MobileApp_C971_LAP2_PaulMilke.Controls
                     new RowDefinition { Height = GridLength.Auto }
                 }
             };
-
+            
             var titleLabel = new Label
             {
-                Text = title,
                 FontAttributes = FontAttributes.Bold,
                 FontSize = 18
             };
+            titleLabel.SetBinding(Label.TextProperty, new Binding("Title", source: this));
+
             Grid.SetRow(titleLabel, 0);
             Grid.SetColumn(titleLabel, 0);
             grid.Children.Add(titleLabel);
@@ -68,7 +87,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.Controls
 
         public void OnTileTapped(object sender, EventArgs e)
         {
-            TileClicked?.Invoke(this, EventArgs.Empty);
+            TileCommand?.Execute(null); 
         }
 
         private async void ShowMenu()
