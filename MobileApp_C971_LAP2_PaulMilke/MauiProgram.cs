@@ -28,6 +28,9 @@ namespace MobileApp_C971_LAP2_PaulMilke
             builder.Services.AddTransient<CoursesPage>();
             builder.Services.AddTransient<CoursesViewModel>(); 
 
+            //Register the sigleton for our local database called SchoolDatabase. 
+            builder.Services.AddSingleton<SchoolDatabase>();
+
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
