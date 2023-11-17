@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Name="mainPageInstance"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:MobileApp_C971_LAP2_PaulMilke.Controls"
+             xmlns:mct="clr-namespace:CommunityToolkit.Maui.Core.Views;assembly=CommunityToolkit.Maui.Core"
+             x:Class="MobileApp_C971_LAP2_PaulMilke.MainPage">
+
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            
+            <CollectionView Grid.Row="0" ItemsSource="{Binding TermList}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <local:TermTile TermData="{Binding TermData}" 
+                                         TileCommand="{Binding Source={x:Reference mainPageInstance}, Path=BindingContext.NavigateToCoursesCommand}"/>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        
+        
+            <Button Text="Add New Term"
+                    VerticalOptions="End"
+                    Margin="10"
+                    Clicked="OnAddClicked"
+                    Grid.Row="1"/>
+        </Grid>
+    </ContentPage.Content>
+
+</ContentPage>

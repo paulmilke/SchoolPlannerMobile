@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mct:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:mct="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui"
+             x:Class="MobileApp_C971_LAP2_PaulMilke.Views.AddNewTermPopup"
+             CanBeDismissedByTappingOutsideOfPopup="True">
+    <VerticalStackLayout WidthRequest="300" HeightRequest="400" Padding="20">
+        <Label 
+            Text="Add a New Term"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center"/>
+        <HorizontalStackLayout>
+            <Label Text="Term Title"
+                   TextColor="Black"
+                   VerticalOptions="CenterAndExpand"/>
+            <Entry x:Name="TermTitle"
+                   Text="{Binding TitleText}"
+                   Placeholder="Enter a title"
+                   PlaceholderColor="Black"
+                   TextColor="Black"
+                   VerticalOptions="CenterAndExpand"
+                   HorizontalOptions="End"/>
+        </HorizontalStackLayout>
+        <HorizontalStackLayout>
+            <Label Text="Start Date"
+                   VerticalOptions="CenterAndExpand"/>
+            <DatePicker 
+                    Date="{Binding StartDate}"    
+                    MinimumDate="01/01/2022"
+                    MaximumDate="01/01/2025"
+                    VerticalOptions="CenterAndExpand"/>
+        </HorizontalStackLayout>
+        <HorizontalStackLayout>
+            <Label Text="End Date"/>
+            <DatePicker 
+                    Date="{Binding EndDate}"
+                    MinimumDate="01/01/2022"
+                    MaximumDate="01/01/2025"
+                    VerticalOptions="CenterAndExpand"/>
+        </HorizontalStackLayout>
+        <Button Text="Add Term" 
+                Margin="20"
+                Padding="10"
+                Command="{Binding AddTermCommand}"
+                Clicked="AddButtonClicked"/>
+
+    </VerticalStackLayout>
+</mct:Popup>
