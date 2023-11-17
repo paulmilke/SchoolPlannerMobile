@@ -11,4 +11,9 @@ public partial class AddNewTermPopup : Popup
 		this.BindingContext = viewModel;
 	}
 
+	public void AddButtonClicked(object sender, EventArgs e)
+	{
+		this.CloseAsync(); 
+	}
+
 }

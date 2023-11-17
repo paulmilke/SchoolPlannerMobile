@@ -1,5 +1,7 @@
-﻿using MobileApp_C971_LAP2_PaulMilke.Models;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using MobileApp_C971_LAP2_PaulMilke.Models;
 using SQLite;
+using MobileApp_C971_LAP2_PaulMilke.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,9 +37,27 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
         {
             await Init();
             if (term.Id != 0)
-                return await Database.UpdateAsync(term);
+            {
+                int ret = await Database.UpdateAsync(term);
+                WeakReferenceMessenger.Default.Send(new TermUpdateMessage());
+                return ret;
+            }
+
             else
-                return await Database.InsertAsync(term); 
+            {
+                int ret = await Database.InsertAsync(term);
+                WeakReferenceMessenger.Default.Send(new TermUpdateMessage());
+                return ret;
+            }
+
+        }
+
+        public async Task<int> DeleteTermAsync(Term term)
+        {
+            await Init();
+            int ret = await Database.DeleteAsync(term);
+            WeakReferenceMessenger.Default.Send(new TermUpdateMessage());
+            return ret;
         }
     }
 }

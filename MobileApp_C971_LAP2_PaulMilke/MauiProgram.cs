@@ -26,7 +26,9 @@ namespace MobileApp_C971_LAP2_PaulMilke
 
             //Registers the CoursePage and corresponding CoursesViewModel as Transient. Meaning it resolves upon leaving the page and loads new the next time. 
             builder.Services.AddTransient<CoursesPage>();
-            builder.Services.AddTransient<CoursesViewModel>(); 
+            builder.Services.AddTransient<CoursesViewModel>();
+
+            builder.Services.AddTransient<AddNewTermPopupViewModel>();
 
             //Register the sigleton for our local database called SchoolDatabase. 
             builder.Services.AddSingleton<SchoolDatabase>();

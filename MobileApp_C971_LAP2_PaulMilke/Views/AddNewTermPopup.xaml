@@ -41,7 +41,8 @@
         <Button Text="Add Term" 
                 Margin="20"
                 Padding="10"
-                Command="{Binding AddTermCommand}"/>
+                Command="{Binding AddTermCommand}"
+                Clicked="AddButtonClicked"/>
 
     </VerticalStackLayout>
 </mct:Popup>

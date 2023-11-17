@@ -1,11 +1,7 @@
-﻿using MobileApp_C971_LAP2_PaulMilke.Models;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using MobileApp_C971_LAP2_PaulMilke.Models;
 using MobileApp_C971_LAP2_PaulMilke.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+using MobileApp_C971_LAP2_PaulMilke.View_Model;
 using System.Windows.Input;
 
 namespace MobileApp_C971_LAP2_PaulMilke.Controls
@@ -15,20 +11,17 @@ namespace MobileApp_C971_LAP2_PaulMilke.Controls
         //The following are the two bindable properties for each tile. 
         //One sets the title name and the other connects with the navigation command. 
         public static readonly BindableProperty TermDataProperty = BindableProperty.Create(nameof(TermData), typeof(Term), typeof(TermTile), default(Term));
+
         //public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Title), typeof(string), typeof(TermTile), default(string));
         public static readonly BindableProperty TileCommandProperty = BindableProperty.Create(nameof(TileCommand), typeof(ICommand), typeof(TermTile), default(ICommand));
+
+        SchoolDatabase schoolDatabase; 
 
         public Term TermData
         {
             get { return (Term)GetValue(TermDataProperty);  }
             set { SetValue(TermDataProperty, value); }
         }
-
-        /*public string Title 
-        {
-            get { return (string)GetValue(TitleProperty); } 
-            set { SetValue(TitleProperty, value); }
-        }*/
 
         public ICommand TileCommand
         {
@@ -40,6 +33,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.Controls
         //This calls the create grid method and sets some simple visual settings. 
         public TermTile()
         {
+            schoolDatabase = new SchoolDatabase();
             this.BorderColor = Color.FromRgb(0, 0, 0);
             this.Padding = 10; 
             this.Margin = 5;
@@ -56,11 +50,13 @@ namespace MobileApp_C971_LAP2_PaulMilke.Controls
                 ColumnDefinitions =
                 {
                     new ColumnDefinition {Width = new GridLength(1, GridUnitType.Auto)},
-                    new ColumnDefinition {Width = new GridLength(2, GridUnitType.Star) }
+                    new ColumnDefinition {Width = new GridLength(2, GridUnitType.Auto) },
+                    new ColumnDefinition {Width = new GridLength(3, GridUnitType.Star) },
                 },
                 RowDefinitions =
                 {
                     new RowDefinition { Height = GridLength.Auto },
+                    new RowDefinition {Height = GridLength.Auto},
                     new RowDefinition { Height = GridLength.Auto }
                 }
             };
@@ -68,24 +64,36 @@ namespace MobileApp_C971_LAP2_PaulMilke.Controls
             var titleLabel = new Label
             {
                 FontAttributes = FontAttributes.Bold,
-                FontSize = 18
+                FontSize = 18,
+                Margin = 5
             };
             titleLabel.SetBinding(Label.TextProperty, new Binding("TermData.Title", source: this));
 
-            Grid.SetRow(titleLabel, 0);
-            Grid.SetColumn(titleLabel, 0);
-            grid.Children.Add(titleLabel);
- 
-            var dateLabel = new Label
+            var sLabel = new Label
             {
-                //Text = $"{DateTime.Now:d} - {DateTime.Now.AddMonths(3):d}",
+                Text = "Start",
+                Margin = new Thickness(left:  5, top: 5, right: 5, bottom: 0),
+                TextDecorations = TextDecorations.Underline
+            };
+
+            var eLabel = new Label
+            {
+                Text = "End",
+                Margin = 5,
+                TextDecorations = TextDecorations.Underline
+            };
+ 
+            var startLabel = new Label
+            {
                 Margin = 5,
             };
-            dateLabel.SetBinding(Label.TextProperty, new Binding("TermData.Start", source: this));
+            startLabel.SetBinding(Label.TextProperty, new Binding("TermData.Start.Date", source: this, stringFormat: "{0:MM/dd/yyyy}"));
 
-            Grid.SetRow(dateLabel, 1);
-            Grid.SetColumn(dateLabel, 0);
-            grid.Children.Add(dateLabel);
+            var endLabel = new Label
+            {
+                Margin = 5, 
+            };
+            endLabel.SetBinding(Label.TextProperty, new Binding("TermData.End.Date", source: this, stringFormat: "{0:MM/dd/yyyy}"));
 
             var menuButton = new ImageButton
             {
@@ -96,8 +104,29 @@ namespace MobileApp_C971_LAP2_PaulMilke.Controls
                 Command = new Command(ShowMenu)
             };
 
+            //Set position of grid elements. 
+            Grid.SetRow(titleLabel, 0);
+            Grid.SetColumn(titleLabel, 0);
+            grid.Children.Add(titleLabel);
+
+            Grid.SetRow(sLabel, 1);
+            Grid.SetColumn(sLabel, 0);
+            grid.Children.Add(sLabel);
+
+            Grid.SetRow(eLabel, 1);
+            Grid.SetColumn(eLabel, 2);
+            grid.Children.Add(eLabel); 
+
+            Grid.SetRow(startLabel, 2);
+            Grid.SetColumn(startLabel, 0);
+            grid.Children.Add(startLabel);
+
+            Grid.SetRow(endLabel, 2);
+            Grid.SetColumn(endLabel, 2);
+            grid.Children.Add(endLabel);
+
             Grid.SetRow(menuButton, 0);
-            Grid.SetColumn(menuButton, 1);
+            Grid.SetColumn(menuButton, 3);
             grid.Children.Add(menuButton);
 
             Content = grid;
@@ -128,10 +157,13 @@ namespace MobileApp_C971_LAP2_PaulMilke.Controls
             switch (action)
             {
                 case "Edit":
+                    WeakReferenceMessenger.Default.Send(new EditTermMessage { UpdatedTerm = TermData});
                     break;
                 case "Details":
+                    TileCommand?.Execute(null); 
                     break;
                 case "Delete":
+                    await schoolDatabase.DeleteTermAsync(TermData);
                     break; 
             }
         }

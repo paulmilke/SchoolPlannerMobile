@@ -1,22 +1,40 @@
 ﻿using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using MobileApp_C971_LAP2_PaulMilke.Models;
 using MobileApp_C971_LAP2_PaulMilke.Services;
+using System.Security.Cryptography.X509Certificates;
 using System.Windows.Input;
 
 namespace MobileApp_C971_LAP2_PaulMilke.View_Model
 {
-    public class AddNewTermPopupViewModel : BaseViewModel
+    public class AddNewTermPopupViewModel : ObservableObject
     {
-        private readonly SchoolDatabase _schoolDatabase;
+        private SchoolDatabase _schoolDatabase;
         public ICommand AddTermCommand { get; set; }
-        public AddNewTermPopupViewModel(INavigationService navigationService) : base(navigationService) 
+        private Term currentTerm;
+        public AddNewTermPopupViewModel()
+        {
+            Initialize(); 
+        }
+
+        public AddNewTermPopupViewModel(Term term) : this()
+        {
+            currentTerm = term;
+            TitleText = term.Title;
+            StartDate = term.Start;   
+            EndDate = term.End;
+        }
+
+        private void Initialize()
         {
             _schoolDatabase = new SchoolDatabase();
             AddTermCommand = new Command<string>(async async => await AddTermtoTable());
         }
 
+
         private string titleText;
-        public string TitleText 
+        public string TitleText   
         {
             get { return titleText; }
             set 
@@ -48,8 +66,20 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
 
         public async Task AddTermtoTable()
         {
-            Term newTerm = new Term(titleText, startDate, endDate);
-            await _schoolDatabase.SaveTermAsync(newTerm);
+            if (currentTerm != null) 
+            {
+                currentTerm.Title = TitleText;
+                currentTerm.Start = StartDate;
+                currentTerm.End = EndDate;
+
+                await _schoolDatabase.SaveTermAsync(currentTerm);
+            }
+            else
+            {
+                Term newTerm = new Term(titleText, startDate, endDate);
+                await _schoolDatabase.SaveTermAsync(newTerm);
+            }
+
         }
 
     }
