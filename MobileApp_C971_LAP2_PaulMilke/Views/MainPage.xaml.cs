@@ -17,7 +17,7 @@ namespace MobileApp_C971_LAP2_PaulMilke
             InitializeComponent();
             BindingContext = new MainPageViewModel(new NavigationService());
 
-            WeakReferenceMessenger.Default.Register<EditTermMessage>(this, async (recipient, message) =>
+            WeakReferenceMessenger.Default.Register<EditTermMessage>(this, (recipient, message) =>
             {
                 this.ShowPopup(new AddNewTermPopup(new AddNewTermPopupViewModel(message.UpdatedTerm)));
             });

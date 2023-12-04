@@ -3,6 +3,7 @@ using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Markup;
 using MobileApp_C971_LAP2_PaulMilke.Services;
 using MobileApp_C971_LAP2_PaulMilke.View_Model;
+using MobileApp_C971_LAP2_PaulMilke.Views;
 
 namespace MobileApp_C971_LAP2_PaulMilke
 {
@@ -27,6 +28,10 @@ namespace MobileApp_C971_LAP2_PaulMilke
             //Registers the CoursePage and corresponding CoursesViewModel as Transient. Meaning it resolves upon leaving the page and loads new the next time. 
             builder.Services.AddTransient<CoursesPage>();
             builder.Services.AddTransient<CoursesViewModel>();
+
+            builder.Services.AddTransient<EditCoursePage>();
+            builder.Services.AddTransient<EditCourseViewModel>();
+
 
             builder.Services.AddTransient<AddNewTermPopupViewModel>();
 
