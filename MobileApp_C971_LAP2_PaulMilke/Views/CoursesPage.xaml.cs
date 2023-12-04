@@ -8,5 +8,16 @@ public partial class CoursesPage : ContentPage
 	{
 		InitializeComponent();
 		this.BindingContext = viewModel;
+
 	}
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        var viewModel = BindingContext as CoursesViewModel;
+        if (viewModel != null)
+        {
+            await viewModel.InitializeAsync();
+        }
+    }
 }

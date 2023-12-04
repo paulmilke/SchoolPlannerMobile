@@ -1,4 +1,5 @@
 ﻿using MobileApp_C971_LAP2_PaulMilke.Controls;
+using MobileApp_C971_LAP2_PaulMilke.Views;
 
 namespace MobileApp_C971_LAP2_PaulMilke
 {
@@ -8,8 +9,9 @@ namespace MobileApp_C971_LAP2_PaulMilke
         {
             InitializeComponent();
 
-            //Sets the routing path for the CoursesPage. 
+            //Sets the routing path for the CoursesPage and Edit page. 
             Routing.RegisterRoute(nameof(CoursesPage), typeof(CoursesPage));
+            Routing.RegisterRoute(nameof(EditCoursePage), typeof(EditCoursePage));
         }
     }
 }

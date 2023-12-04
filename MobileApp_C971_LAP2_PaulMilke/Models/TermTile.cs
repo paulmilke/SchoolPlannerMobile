@@ -9,10 +9,8 @@ namespace MobileApp_C971_LAP2_PaulMilke.Controls
     public class TermTile : Frame
     {
         //The following are the two bindable properties for each tile. 
-        //One sets the title name and the other connects with the navigation command. 
+        //One sets receives and sets the Term object for the tile. The other is a command property to register when it's tapped. 
         public static readonly BindableProperty TermDataProperty = BindableProperty.Create(nameof(TermData), typeof(Term), typeof(TermTile), default(Term));
-
-        //public static readonly BindableProperty TitleProperty = BindableProperty.Create(nameof(Title), typeof(string), typeof(TermTile), default(string));
         public static readonly BindableProperty TileCommandProperty = BindableProperty.Create(nameof(TileCommand), typeof(ICommand), typeof(TermTile), default(ICommand));
 
         SchoolDatabase schoolDatabase; 
@@ -29,7 +27,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.Controls
             set { SetValue(TileCommandProperty, value);}
         }
 
-        //The main TermTile constructor. This doesn't take any parameters due tot he bindable properties above. 
+        //The main TermTile constructor. This doesn't take any parameters due to the bindable properties above. 
         //This calls the create grid method and sets some simple visual settings. 
         public TermTile()
         {
@@ -37,7 +35,6 @@ namespace MobileApp_C971_LAP2_PaulMilke.Controls
             this.BorderColor = Color.FromRgb(0, 0, 0);
             this.Padding = 10; 
             this.Margin = 5;
-
             this.CreateGrid(); 
         }
 
@@ -139,7 +136,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.Controls
         //Tap event method that calls the TileCommand via binding. This command calls the navigation method in the MainPageViewModel. 
         public void OnTileTapped(object sender, EventArgs e)
         {
-            TileCommand?.Execute(null); 
+            TileCommand?.Execute(TermData.Id); 
         }
 
         //Show menu is called when the (...) button is tapped. This pops a menu with the following options. 
@@ -160,7 +157,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.Controls
                     WeakReferenceMessenger.Default.Send(new EditTermMessage { UpdatedTerm = TermData});
                     break;
                 case "Details":
-                    TileCommand?.Execute(null); 
+                    TileCommand?.Execute(TermData.Id); 
                     break;
                 case "Delete":
                     await schoolDatabase.DeleteTermAsync(TermData);

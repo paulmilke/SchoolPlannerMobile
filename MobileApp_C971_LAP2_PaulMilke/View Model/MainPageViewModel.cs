@@ -46,12 +46,12 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
             }
         }
 
-        public ICommand NavigateToCoursesCommand => new Command<string>(async async => await NavigateToCourses());
+        public ICommand NavigateToCoursesCommand => new Command<int>(async (termId) => await NavigateToCourses(termId));
 
-        public async Task NavigateToCourses()
+        public async Task NavigateToCourses(int termId)
         {
             var navigationService = new NavigationService(); 
-            await navigationService.NavigateToAsync(nameof(CoursesPage));
+            await navigationService.NavigateToAsync(nameof(CoursesPage), termId);
         }
 
         ~MainPageViewModel()
