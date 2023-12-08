@@ -2,6 +2,8 @@ using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using MobileApp_C971_LAP2_PaulMilke.Models;
 using MobileApp_C971_LAP2_PaulMilke.Services;
+using Plugin.LocalNotification;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Input;
 
@@ -12,6 +14,8 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model;
 public class EditCourseViewModel : BaseViewModel
 {
 	SchoolDatabase schoolDatabase; 
+	private readonly Services.INotificationService notificationService;
+
 	private int classID; 
 	public int ClassID
 	{
@@ -37,6 +41,7 @@ public class EditCourseViewModel : BaseViewModel
     public ICommand ToggleEditCommand { get; }
 	public ICommand UpdateClassCommand { get; }
 	public ICommand DeleteClassCommand { get; }
+	public ICommand ShareNotesCommand { get; }
 
     private Class currentClass; 
 	public Class CurrentClass
@@ -52,12 +57,14 @@ public class EditCourseViewModel : BaseViewModel
 		}
     }
 
-	public EditCourseViewModel(INavigationService navigationService) : base(navigationService)
+	public EditCourseViewModel(INavigationService navigationService, Services.INotificationService _notificationService) : base(navigationService)
 	{
 		schoolDatabase = new SchoolDatabase();
+		notificationService = _notificationService;
         ToggleEditCommand = new Command(() => IsEditing = !IsEditing);
 		UpdateClassCommand = new Command(async () => await UpdateClass());
 		DeleteClassCommand = new Command(async() => await DeleteClass());
+		ShareNotesCommand = new Command(async () => await ShareNotes(CurrentClass.Notes));
     }
 
 	public async Task InitializeAsync()
@@ -80,6 +87,7 @@ public class EditCourseViewModel : BaseViewModel
 		InstructorName = CurrentClass?.InstructorName ?? "Loading...";
 		InstructorEmail = CurrentClass?.InstructorEmail ?? "Loading...";
 		InstructorPhone = CurrentClass?.InstructorPhone ?? "Loading...";
+		ClassNotes = CurrentClass?.Notes ?? "Loading...";
     }
 
 	public async Task UpdateClass()
@@ -91,8 +99,73 @@ public class EditCourseViewModel : BaseViewModel
 		CurrentClass.InstructorName = InstructorName;
 		CurrentClass.InstructorEmail = InstructorEmail;
 		CurrentClass.InstructorPhone = InstructorPhone;
+		CurrentClass.Notes = ClassNotes;
 		await schoolDatabase.SaveClassAsync(CurrentClass); 
 		ToggleEditCommand.Execute(this);
+		await ScheduleClassNotificationAsync();
+
+	}
+
+	public async Task ScheduleClassNotificationAsync()
+	{
+		if (await notificationService.AreNotificationsEnabledAsync())
+		{
+			//Start date notification
+			var time = DateTime.Now;
+			if (CurrentClass.StartDate == DateTime.Today)
+			{
+				time = DateTime.Now.AddSeconds(1);
+			}
+			else
+			{
+				time = CurrentClass.StartDate.AddHours(8); 
+			}
+
+            var notificationRequest = new NotificationRequest
+            {
+                NotificationId = int.Parse($"{CurrentClass.Id}1"),
+                Title = "Course Starting",
+                Description = $"Your course: {CurrentClass.ClassName} starts today!",
+                ReturningData = "Dummy Data",
+                Schedule =
+            {
+                NotifyTime =  time,
+            }
+            };
+
+			//End date notification
+			var endTime = CurrentClass.EndDate.AddHours(8);
+
+			if(CurrentClass.EndDate == DateTime.Today)
+			{
+				endTime = DateTime.Now.AddSeconds(1);
+			}
+			else
+			{
+				endTime = CurrentClass.EndDate.AddHours(8);
+			}
+
+			var endNotificationRequest = new NotificationRequest
+			{
+				NotificationId = int.Parse($"{CurrentClass.Id}2"),
+				Title = "Course Ending",
+				Description = $"Your course: {CurrentClass.ClassName} ends today!",
+				ReturningData = "Dummy Data", 
+				Schedule =
+				{
+					NotifyTime = endTime,
+				}
+			};
+
+			//Scheduling both notifications. 
+            await notificationService.ScheduleNotificationAsync(notificationRequest);
+			await notificationService.ScheduleNotificationAsync(endNotificationRequest);
+        }
+		else
+		{
+			await notificationService.RequestNotificationPermissionAsync(); 
+		}
+
 	}
 
 	public async Task DeleteClass()
@@ -116,9 +189,18 @@ public class EditCourseViewModel : BaseViewModel
 
     }
 
+	public async Task ShareNotes(string text)
+    {
+        await Share.Default.RequestAsync(new ShareTextRequest
+        {
+            Text = text,
+            Title = "Share Notes"
+        });
+    }
 
 
-	private string courseName; 
+	//Properties for the course in question. 
+    private string courseName; 
 	public string CourseName
 	{
 		get => courseName;
@@ -192,6 +274,17 @@ public class EditCourseViewModel : BaseViewModel
 		{
 			instructorPhone = value;
 			OnPropertyChanged(nameof(InstructorPhone));
+		}
+	}
+
+	private string classNotes; 
+	public string ClassNotes
+	{
+		get => classNotes;
+		set
+		{
+			classNotes = value;
+			OnPropertyChanged(nameof(ClassNotes));
 		}
 	}
 }

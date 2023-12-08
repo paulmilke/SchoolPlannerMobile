@@ -44,6 +44,8 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
                 TermTile tile = new TermTile { TermData = term };
                 TermList.Add(tile);
             }
+
+
         }
 
         public ICommand NavigateToCoursesCommand => new Command<int>(async (termId) => await NavigateToCourses(termId));

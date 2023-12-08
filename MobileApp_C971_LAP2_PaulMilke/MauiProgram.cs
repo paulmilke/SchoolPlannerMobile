@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Plugin.LocalNotification;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Markup;
 using MobileApp_C971_LAP2_PaulMilke.Services;
@@ -16,6 +17,7 @@ namespace MobileApp_C971_LAP2_PaulMilke
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
                 .UseMauiCommunityToolkitMarkup()
+                .UseLocalNotification()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -24,6 +26,8 @@ namespace MobileApp_C971_LAP2_PaulMilke
 
             //Registers singleton of INavigationService. Singleton means will last life of app session. 
             builder.Services.AddSingleton<INavigationService, NavigationService>();
+
+            builder.Services.AddSingleton<Services.INotificationService, NotificationService>();
 
             //Registers the CoursePage and corresponding CoursesViewModel as Transient. Meaning it resolves upon leaving the page and loads new the next time. 
             builder.Services.AddTransient<CoursesPage>();
