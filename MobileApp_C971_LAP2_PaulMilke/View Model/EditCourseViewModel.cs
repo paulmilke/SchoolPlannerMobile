@@ -2,7 +2,9 @@ using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using MobileApp_C971_LAP2_PaulMilke.Models;
 using MobileApp_C971_LAP2_PaulMilke.Services;
+using MobileApp_C971_LAP2_PaulMilke.Views;
 using Plugin.LocalNotification;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Input;
@@ -42,6 +44,8 @@ public class EditCourseViewModel : BaseViewModel
 	public ICommand UpdateClassCommand { get; }
 	public ICommand DeleteClassCommand { get; }
 	public ICommand ShareNotesCommand { get; }
+	public ICommand NavigateToPerformanceAssessment { get; }
+    public ICommand NavigateToObjectiveAssessment { get; }
 
     private Class currentClass; 
 	public Class CurrentClass
@@ -57,17 +61,35 @@ public class EditCourseViewModel : BaseViewModel
 		}
     }
 
-	public EditCourseViewModel(INavigationService navigationService, Services.INotificationService _notificationService) : base(navigationService)
+	public EditCourseViewModel(INavigationService _navigationService, Services.INotificationService _notificationService) : base(_navigationService)
 	{
 		schoolDatabase = new SchoolDatabase();
 		notificationService = _notificationService;
+
         ToggleEditCommand = new Command(() => IsEditing = !IsEditing);
 		UpdateClassCommand = new Command(async () => await UpdateClass());
 		DeleteClassCommand = new Command(async() => await DeleteClass());
 		ShareNotesCommand = new Command(async () => await ShareNotes(CurrentClass.Notes));
+		NavigateToPerformanceAssessment = new Command(async () => await NavigateToAssessmentPerformance());
+        NavigateToObjectiveAssessment = new Command(async () => await NavigateToAssessmentObjective());
     }
 
-	public async Task InitializeAsync()
+	public async Task NavigateToAssessmentPerformance()
+	{
+		string assessment = "Performance Assessment"; 
+		var navigationService = new NavigationService(); 
+		await navigationService.NavigateToAsync(nameof(AssessmentEditAdd), assessment, true, ClassID);
+	}
+
+    public async Task NavigateToAssessmentObjective()
+    {
+        string assessment = "Objective Assessment";
+        var navigationService = new NavigationService();
+        await navigationService.NavigateToAsync(nameof(AssessmentEditAdd), assessment, true, ClassID);
+    }
+
+
+    public async Task InitializeAsync()
 	{
 		await LoadClassInfo();
 		UpdateBindedProperties();

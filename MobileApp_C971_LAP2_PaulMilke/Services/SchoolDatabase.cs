@@ -26,6 +26,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             Database = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
             var result = await Database.CreateTableAsync<Term>();
             var resultClass = await Database.CreateTableAsync<Class>();
+            var resultAssessment=await Database.CreateTableAsync<Assessment>();
         }
 
         public async Task<List<Term>> GetTermsAsync()
@@ -83,6 +84,21 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             else
             {
                 int ret = await Database.InsertAsync(newClass);
+                return ret; 
+            }
+        }
+
+        public async Task<int> SaveAssessmentAsync(Assessment newAssessment)
+        {
+            await Init();
+            if (newAssessment.Id != 0)
+            {
+                int ret = await Database.UpdateAsync(newAssessment);
+                return ret;
+            }
+            else
+            {
+                int ret = await Database.InsertAsync(newAssessment);
                 return ret; 
             }
         }
