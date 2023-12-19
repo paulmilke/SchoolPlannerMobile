@@ -22,6 +22,13 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             await Shell.Current.GoToAsync(routeWithParameter); 
         }
 
+        public async Task NavigateToAsync(string routeName, string item, bool isAdding, int classID)
+        {
+            var routeWithParameter = $"{routeName}?ITEM={item}&BOOL={isAdding}&CLASSID={classID}";
+            await Shell.Current.GoToAsync(routeWithParameter);
+        }
+
+
         public async Task GoBackAsync()
         {
             await Shell.Current.Navigation.PopAsync();

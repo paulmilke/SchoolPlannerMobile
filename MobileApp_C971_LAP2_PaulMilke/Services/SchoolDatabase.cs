@@ -26,6 +26,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             Database = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
             var result = await Database.CreateTableAsync<Term>();
             var resultClass = await Database.CreateTableAsync<Class>();
+            var resultAssessment=await Database.CreateTableAsync<Assessment>();
         }
 
         public async Task<List<Term>> GetTermsAsync()
@@ -38,6 +39,18 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
         {
             await Init(); 
             return await Database.Table<Class>().Where(c=>c.TermId == termID).ToListAsync();
+        }
+
+        public async Task<List<Assessment>> GetAssessmentsAsync(int classID)
+        {
+            await Init();
+            return await Database.Table<Assessment>().Where(c => c.ClassId == classID).ToListAsync();
+        }
+
+        public async Task<Assessment> GetSingleAssessmentAsync(int assessmentID)
+        {
+            await Init();
+            return await Database.Table<Assessment>().Where(c => c.Id == assessmentID).FirstOrDefaultAsync();
         }
 
         public async Task<Class> GetSingleClass(int classID)
@@ -87,6 +100,21 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             }
         }
 
+        public async Task<int> SaveAssessmentAsync(Assessment newAssessment)
+        {
+            await Init();
+            if (newAssessment.Id != 0)
+            {
+                int ret = await Database.UpdateAsync(newAssessment);
+                return ret;
+            }
+            else
+            {
+                int ret = await Database.InsertAsync(newAssessment);
+                return ret; 
+            }
+        }
+
         public async Task<int> DeleteTermAsync(Term term)
         {
             await Init();
@@ -100,6 +128,13 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             await Init();
             int ret = await Database.DeleteAsync(currentClass);
             return ret; 
+        }
+
+        public async Task<int> DeleteAssessmentAsync(Assessment currentAssessment)
+        {
+            await Init(); 
+            int ret = await Database.DeleteAsync(currentAssessment);
+            return ret;
         }
     }
 

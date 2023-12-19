@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:MobileApp_C971_LAP2_PaulMilke.Models"
+             x:Class="MobileApp_C971_LAP2_PaulMilke.Views.AssessmentEditAdd"
+             Title="AssessmentEditAdd">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+            <Style x:Key="labelStyle" TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="Margin" Value="10,10,10,0"/>
+            </Style>
+            <Style x:Key="infoLabel" TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="Margin" Value="10,0,10,0"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+    <ScrollView>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0"
+                   Text="Assessment Title"
+                   Style="{StaticResource labelStyle}"/>
+
+                <Label Grid.Row="1" Grid.Column="0"
+                       Text="{Binding AssessmentName}"
+                       Style="{StaticResource infoLabel}"
+                       IsVisible="{Binding IsAdding, Converter={StaticResource InverseBooleanConverter}}"/>
+            
+                <Entry Grid.Row="1" Grid.Column="0"
+                       Text="{Binding AssessmentName, Mode=TwoWay}"
+                       Placeholder="Please enter a name for the assessment." 
+                       IsVisible="{Binding IsAdding}"
+                       FontSize="15" 
+                       Margin="20,5,20,0"/>
+
+                <Label Grid.Row="2" Grid.Column="0"
+                       Text="Assessment Type"
+                       Style="{StaticResource labelStyle}"/>
+
+                <Label Grid.Row="3" Grid.Column="0"
+                       Text="{Binding AssessmentType}"
+                       Style="{StaticResource infoLabel}"/>
+
+                <Grid Grid.Row="4" Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Row="0" Grid.Column="0"
+                           Text="Start Date"
+                           Style="{StaticResource labelStyle}"/>
+
+                    <Label Grid.Row="0" Grid.Column="1"
+                           Text="End Date"
+                           Style="{StaticResource labelStyle}"/>
+
+                    <Label Grid.Row="1" Grid.Column="0"
+                           Text="{Binding StartDate}"
+                           Style="{StaticResource infoLabel}"
+                           IsVisible="{Binding IsAdding, Converter={StaticResource InverseBooleanConverter}}"/>
+
+                    <DatePicker Grid.Row="1" Grid.Column="0"
+                           Date="{Binding StartDate, Mode=TwoWay}"
+                           IsVisible="{Binding IsAdding}"
+                           Style="{StaticResource infoLabel}"/>
+
+                    <Label Grid.Row="1" Grid.Column="1"
+                           Text="{Binding EndDate}"
+                           Style="{StaticResource infoLabel}"
+                           IsVisible="{Binding IsAdding, Converter={StaticResource InverseBooleanConverter}}"/>
+
+                    <DatePicker Grid.Row="1" Grid.Column="1"
+                           Date="{Binding EndDate, Mode=TwoWay}"
+                           IsVisible="{Binding IsAdding}"
+                           Style="{StaticResource infoLabel}"/>
+
+                </Grid>
+
+                <Button Grid.Row="5" Grid.Column="0"
+                        Text="Save Assessment"
+                        Margin="5"
+                        IsVisible="{Binding IsAdding}"
+                        Command="{Binding AddAssessmentCommand}"/>
+
+                <Button Grid.Row="5" Grid.Column="0"
+                        Text="Edit Assessment"
+                        Margin="5"
+                        IsVisible="{Binding IsAdding, Converter={StaticResource InverseBooleanConverter}}"
+                        Command="{Binding EditAssessmentCommand}"/>
+
+                <Button Grid.Row="6" Grid.Column="0"
+                        Text="Delete Assessment"
+                        Margin="5"
+                        BackgroundColor="DarkRed"
+                        IsVisible="{Binding IsAdding, Converter={StaticResource InverseBooleanConverter}}"
+                        Command="{Binding DeleteAssessmentCommand}"/>
+            </Grid>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

@@ -12,6 +12,7 @@ namespace MobileApp_C971_LAP2_PaulMilke
             //Sets the routing path for the CoursesPage and Edit page. 
             Routing.RegisterRoute(nameof(CoursesPage), typeof(CoursesPage));
             Routing.RegisterRoute(nameof(EditCoursePage), typeof(EditCoursePage));
+            Routing.RegisterRoute(nameof(AssessmentEditAdd), typeof(AssessmentEditAdd));
         }
     }
 }
