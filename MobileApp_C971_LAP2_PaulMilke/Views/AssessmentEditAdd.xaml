@@ -35,6 +35,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -105,12 +106,17 @@
                 </Grid>
 
                 <Button Grid.Row="5" Grid.Column="0"
-                        Text="Add New Assessment"
+                        Text="Save Assessment"
                         Margin="5"
                         IsVisible="{Binding IsAdding}"
                         Command="{Binding AddAssessmentCommand}"/>
 
+                <Button Grid.Row="5" Grid.Column="0"
+                        Text="Edit Assessment"
+                        Margin="5"
+                        IsVisible="{Binding IsAdding, Converter={StaticResource InverseBooleanConverter}}"
+                        Command="{Binding EditAssessmentCommand}"/>
             </Grid>
-    </ScrollView>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

@@ -1,9 +1,11 @@
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Mvvm.ComponentModel;
 using MobileApp_C971_LAP2_PaulMilke.Models;
 using MobileApp_C971_LAP2_PaulMilke.Services;
 using MobileApp_C971_LAP2_PaulMilke.Views;
 using Plugin.LocalNotification;
+using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
@@ -18,7 +20,9 @@ public class EditCourseViewModel : BaseViewModel
 	SchoolDatabase schoolDatabase; 
 	private readonly Services.INotificationService notificationService;
 
-	private int classID; 
+	public ObservableCollection<AssessmentTile> AssessmentTiles { get; set; } = new ObservableCollection<AssessmentTile>();
+
+    private int classID; 
 	public int ClassID
 	{
 		get => classID;
@@ -40,12 +44,35 @@ public class EditCourseViewModel : BaseViewModel
         }
     }
 
+	private bool isPerformance;
+	public bool IsPerformance
+	{
+		get { return isPerformance; } 
+		set 
+		{
+			isPerformance = value;
+			OnPropertyChanged();
+		}
+	}
+
+	private bool isObjective; 
+	public bool IsObjective
+	{
+		get { return isObjective; }
+		set
+		{
+			isObjective = value;
+			OnPropertyChanged();
+		}
+	}
+
     public ICommand ToggleEditCommand { get; }
 	public ICommand UpdateClassCommand { get; }
 	public ICommand DeleteClassCommand { get; }
 	public ICommand ShareNotesCommand { get; }
 	public ICommand NavigateToPerformanceAssessment { get; }
     public ICommand NavigateToObjectiveAssessment { get; }
+	public ICommand NavigateFromTile { get; }
 
     private Class currentClass; 
 	public Class CurrentClass
@@ -72,6 +99,13 @@ public class EditCourseViewModel : BaseViewModel
 		ShareNotesCommand = new Command(async () => await ShareNotes(CurrentClass.Notes));
 		NavigateToPerformanceAssessment = new Command(async () => await NavigateToAssessmentPerformance());
         NavigateToObjectiveAssessment = new Command(async () => await NavigateToAssessmentObjective());
+		NavigateFromTile = new Command<int>(async (assessmentID) => await NavigateFromTiletoEdit(assessmentID));
+    }
+
+	public async Task NavigateFromTiletoEdit(int assessmentID)
+	{
+        var navigationService = new NavigationService();
+		await navigationService.NavigateToAsync(nameof(AssessmentEditAdd), assessmentID);
     }
 
 	public async Task NavigateToAssessmentPerformance()
@@ -97,7 +131,28 @@ public class EditCourseViewModel : BaseViewModel
 
 	public async Task LoadClassInfo()
 	{
+		AssessmentTiles.Clear();
 		CurrentClass = await schoolDatabase.GetSingleClass(ClassID);
+		var list = await schoolDatabase.GetAssessmentsAsync(ClassID);
+
+        IsPerformance = true;
+        IsObjective = true;
+
+        foreach (var item in list)
+		{
+			AssessmentTile newTile = new AssessmentTile { AssessmentData = item };
+			AssessmentTiles.Add(newTile);
+
+
+			if (item.AssessmentType == "Performance Assessment")
+			{
+				IsPerformance = false;
+			}
+			else if(item.AssessmentType == "Objective Assessment")
+			{
+				IsObjective = false;
+			}
+		}
 	}
 
 	public void UpdateBindedProperties()

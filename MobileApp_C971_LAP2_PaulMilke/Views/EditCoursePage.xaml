@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<ContentPage x:Name="editCoursePageInstance"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:MobileApp_C971_LAP2_PaulMilke.Models"
              x:Class="MobileApp_C971_LAP2_PaulMilke.Views.EditCoursePage"
@@ -27,35 +28,36 @@
 
     <ContentPage.Content>
         <ScrollView>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                 <RowDefinition Height="Auto" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
 
                 </Grid.RowDefinitions>
 
-            <!-- Titles -->
+                <!-- Titles -->
                 <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource labelStyle}">
                     <Label.FormattedText>
                         <FormattedString>
@@ -141,7 +143,7 @@
                             <Span Text="Name" TextDecorations="Underline"/>
                         </FormattedString>
                     </Label.FormattedText>
-                    
+
                 </Label>
 
                 <Label Grid.Row="11" Grid.Column="0" Style="{StaticResource labelStyle}">
@@ -166,7 +168,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    
+
                     <Label Grid.Row="0" Grid.Column="0" HorizontalTextAlignment="End" Margin="0,0,0,0">
                         <Label.FormattedText>
                             <FormattedString>
@@ -181,34 +183,34 @@
                                  HorizontalOptions="Start"
                                  Source="shareicon.png"
                                  HeightRequest="20"/>
-                    
+
                 </Grid>
 
-            
 
-            <!-- View Mode -->
+
+                <!-- View Mode -->
                 <Label Grid.Row="1" Grid.Column="0" 
                    Text="{Binding CourseName}"
                    IsVisible="{Binding IsEditing, Converter={StaticResource InverseBooleanConverter}}" 
                    Style="{StaticResource infoLabel}"/>
 
 
-            <Label Grid.Row="10" Grid.Column="0"
+                <Label Grid.Row="10" Grid.Column="0"
                    Text="{Binding InstructorName}"
                    IsVisible="{Binding IsEditing, Converter={StaticResource InverseBooleanConverter}}"
                    Style="{StaticResource infoLabel}"/>
 
-            <Label Grid.Row="12" Grid.Column="0"
+                <Label Grid.Row="12" Grid.Column="0"
                    Text="{Binding InstructorEmail}"
                    IsVisible="{Binding IsEditing, Converter={StaticResource InverseBooleanConverter}}"
                    Style="{StaticResource infoLabel}"/>
 
-            <Label Grid.Row="14" Grid.Column="0"
+                <Label Grid.Row="14" Grid.Column="0"
                    Text="{Binding InstructorPhone}"
                    IsVisible="{Binding IsEditing, Converter={StaticResource InverseBooleanConverter}}"
                    Style="{StaticResource infoLabel}"/>
 
-            <Editor Grid.Row="16" Grid.Column="0"
+                <Editor Grid.Row="16" Grid.Column="0"
                    Text="{Binding ClassNotes}"
                    IsVisible="{Binding IsEditing, Converter={StaticResource InverseBooleanConverter}}"
                    IsReadOnly="True"
@@ -216,15 +218,16 @@
                    FontSize="12"
                    Margin="5,0,5,5"/>
 
-                <Button Grid.Row="17" Grid.Column="0"
-                    Text="Edit"
-                    IsVisible="{Binding IsEditing, Converter={StaticResource InverseBooleanConverter}}" 
-                    Command="{Binding ToggleEditCommand}"
-                    FontSize="12"
-                    Padding="0"
-                    Margin="2"/>
-
-                <Grid Grid.Row="18" Grid.Column="0">
+                <CollectionView Grid.Row="18" ItemsSource="{Binding AssessmentTiles}" IsVisible="{Binding IsEditing, Converter={StaticResource InverseBooleanConverter}}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <local:AssessmentTile AssessmentData="{Binding AssessmentData}"
+                                                  AssessmentTileCommand="{Binding Source={x:Reference editCoursePageInstance}, Path=BindingContext.NavigateFromTile}"/>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                
+                <Grid Grid.Row="19" Grid.Column="0" IsVisible="{Binding IsEditing, Converter={StaticResource InverseBooleanConverter}}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
@@ -232,22 +235,37 @@
 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-
                     <Button Grid.Row="0" Grid.Column="0"
+                    Text="Edit Class"
+                    Command="{Binding ToggleEditCommand}"
+                    FontSize="12"
+                    Margin="2"/>
+
+
+                    <Button Grid.Row="0" Grid.Column="1"
+                     Text="Delete Class"
+                     Margin="2"
+                     BackgroundColor="DarkRed"
+                     Command="{Binding DeleteClassCommand}"/>
+
+
+                    <Button Grid.Row="1" Grid.Column="0"
                     Text="Add Performance Assessment"
-                    IsVisible="{Binding IsEditing, Converter={StaticResource InverseBooleanConverter}}" 
                     Command="{Binding NavigateToPerformanceAssessment}"
+                    IsEnabled="{Binding IsPerformance}"
                     FontSize="12"
                     LineBreakMode="WordWrap"
                     Padding="0"
                     Margin="2"/>
 
-                    <Button Grid.Row="0" Grid.Column="1"
+                    <Button Grid.Row="1" Grid.Column="1"
                     Text="Add Objective Assessment"
-                    IsVisible="{Binding IsEditing, Converter={StaticResource InverseBooleanConverter}}" 
                     Command="{Binding NavigateToObjectiveAssessment}"
+                    IsEnabled="{Binding IsObjective}"
                     FontSize="12"
                     LineBreakMode="WordWrap"
                     Padding="0"
@@ -256,14 +274,7 @@
                 </Grid>
 
 
-                <Button Grid.Row="19" Grid.Column="0"
-                    Text="Delete"
-                    Margin="5"
-                    BackgroundColor="DarkRed"
-                    Command="{Binding DeleteClassCommand}"
-                    IsVisible="{Binding IsEditing, Converter={StaticResource InverseBooleanConverter}}"/>
-
-            <!-- Edit Mode -->
+                <!-- Edit Mode -->
                 <Entry Grid.Row="1" Grid.Column="0"
                    Text="{Binding CourseName, Mode=TwoWay}"
                    IsVisible="{Binding IsEditing}"
@@ -275,48 +286,50 @@
                     Title="Select Class Status"
                     SelectedItem="{Binding Status, Mode=TwoWay}"
                     IsVisible="{Binding IsEditing}">
-                <Picker.ItemsSource>
-                    <x:Array Type="{x:Type x:String}">
-                        <x:String>Plan to Take</x:String>
-                        <x:String>In Progress</x:String>
-                        <x:String>Completed</x:String>
-                        <x:String>Dropped</x:String>
-                    </x:Array>
-                </Picker.ItemsSource>
-            </Picker>
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>Plan to Take</x:String>
+                            <x:String>In Progress</x:String>
+                            <x:String>Completed</x:String>
+                            <x:String>Dropped</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
 
-            <Entry Grid.Row="10" Grid.Column="0"
+                <Entry Grid.Row="10" Grid.Column="0"
                    Text="{Binding InstructorName, Mode=TwoWay}"
                    IsVisible="{Binding IsEditing}"
                    FontSize="15" 
                    Margin="5"/>
 
-            <Entry Grid.Row="12" Grid.Column="0"
+                <Entry Grid.Row="12" Grid.Column="0"
                    Text="{Binding InstructorEmail, Mode=TwoWay}"
                    IsVisible="{Binding IsEditing}"
                    FontSize="15" 
                    Margin="5"/>
 
-            <Entry Grid.Row="14" Grid.Column="0"
+                <Entry Grid.Row="14" Grid.Column="0"
                    Text="{Binding InstructorPhone, Mode=TwoWay}"
                    IsVisible="{Binding IsEditing}"
                    FontSize="15" 
                    Margin="5"/>
-            
-            <Editor Grid.Row="16" Grid.Column="0"
+
+                <Editor Grid.Row="16" Grid.Column="0"
                     Text="{Binding ClassNotes, Mode=TwoWay}"
                     IsVisible="{Binding IsEditing}"
                     AutoSize="TextChanges"
                     FontSize="12" 
                     Margin="5"/>
 
-            <Button Grid.Row="17" Grid.Column="0"
+                <Button Grid.Row="17" Grid.Column="0"
                     Text="Save"
                     IsVisible="{Binding IsEditing}" 
                     Command="{Binding UpdateClassCommand}"
                     Margin="5"/>
+                
+            </Grid>
 
-        </Grid>
+
         </ScrollView>
     </ContentPage.Content>
 

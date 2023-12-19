@@ -6,16 +6,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Plugin.LocalNotification;
 
 namespace MobileApp_C971_LAP2_PaulMilke.View_Model
 {
     [QueryProperty(nameof(AssessmentType), "ITEM")]
     [QueryProperty(nameof(IsAdding), "BOOL")]
-    [QueryProperty(nameof(ClassID),"CLASSID")]
+    [QueryProperty(nameof(ClassID), "CLASSID")]
+    [QueryProperty(nameof(AssessmentID), "OBJECTID")]
     public class AssessmentEditAddViewModel : BaseViewModel
     {
         SchoolDatabase schoolDatabase;
+        private readonly Services.INotificationService notificationService;
         public ICommand AddAssessmentCommand { get; }
+        public ICommand EditAssessmentCommand { get; }
 
         private int classID;
         public int ClassID
@@ -24,6 +28,17 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
             set
             {
                 classID = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int assessmentID;
+        public int AssessmentID
+        {
+            get { return assessmentID; }
+            set
+            {
+                assessmentID = value;
                 OnPropertyChanged();
             }
         }
@@ -63,23 +78,43 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
         }
 
 
-        public AssessmentEditAddViewModel(INavigationService navigationService) : base(navigationService) 
+        public AssessmentEditAddViewModel(INavigationService navigationService, Services.INotificationService _notificationService) : base(navigationService) 
         {
             schoolDatabase = new SchoolDatabase();
+            notificationService = _notificationService;
             currentAssessment = new Assessment();
             AddAssessmentCommand = new Command(async () => await AddAssessment());
+            EditAssessmentCommand = new Command(SwapIsAdding);
             SetValues();
         }
 
         public void InitializeAsync()
         {
+            SetValues();
+        }
+
+        private async void SetValues()
+        {
+            if(AssessmentID != 0) 
+            {
+                CurrentAssessment = await schoolDatabase.GetSingleAssessmentAsync(AssessmentID);
+                ClassID = CurrentAssessment.ClassId;
+                AssessmentName = CurrentAssessment.AssessmentName; 
+                AssessmentType = CurrentAssessment.AssessmentType;  
+                StartDate = CurrentAssessment.StartDate;
+                EndDate = CurrentAssessment.EndDate;
+            }
+            else
+            {
+                StartDate = DateTime.Now;
+                EndDate = DateTime.Now;
+            }
 
         }
 
-        private void SetValues()
+        private void SwapIsAdding()
         {
-            StartDate = DateTime.Now;
-            EndDate = DateTime.Now;
+            IsAdding = true; 
         }
 
         public async Task AddAssessment()
@@ -90,6 +125,58 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
             CurrentAssessment.StartDate = StartDate;
             CurrentAssessment.EndDate = EndDate;
             await schoolDatabase.SaveAssessmentAsync(CurrentAssessment);
+            await ScheduleAssessmentNotificationsAsync(); 
+        }
+
+        public async Task ScheduleAssessmentNotificationsAsync()
+        {
+            //Start date notification
+            var sTime = DateTime.Now;
+            if (CurrentAssessment.StartDate == DateTime.Today)
+            {
+                sTime = DateTime.Now.AddSeconds(1);
+            }
+            else
+            {
+                sTime = CurrentAssessment.StartDate.AddHours(8); 
+            }
+
+            var startNotificationRequest = new NotificationRequest
+            {
+                NotificationId = int.Parse($"{CurrentAssessment.Id}1"),
+                Title = "Assessment Starting",
+                Description = $"Your assessment: {CurrentAssessment.AssessmentName} starts today!",
+                Schedule =
+                {
+                    NotifyTime = sTime,
+                }
+            };
+
+            //End date notification
+
+            var eTime = DateTime.Now;
+            if (CurrentAssessment.EndDate == DateTime.Today)
+            {
+                eTime = DateTime.Now.AddSeconds(1);
+            }
+            else
+            {
+                eTime= CurrentAssessment.EndDate.AddHours(8);
+            }
+
+            var endNotificationRequest = new NotificationRequest
+            {
+                NotificationId = int.Parse($"{CurrentAssessment.Id}2"),
+                Title = "Assessment Ending",
+                Description = $"Your assessment: {CurrentAssessment.AssessmentName} ends today!",
+                Schedule =
+                {
+                    NotifyTime= eTime,
+                }
+            };
+
+            await notificationService.ScheduleNotificationAsync(startNotificationRequest);
+            await notificationService.ScheduleNotificationAsync(endNotificationRequest); 
         }
 
         private string assessmentName; 
@@ -99,7 +186,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
             set
             {
                 assessmentName = value;
-                OnPropertyChanged(nameof(assessmentName));
+                OnPropertyChanged();
             }
         }
 
@@ -111,7 +198,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
             set
             {
                 startDate = value;
-                OnPropertyChanged(nameof(startDate));
+                OnPropertyChanged();
             }
         }
 
@@ -122,7 +209,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
             set
             {
                 endDate = value;
-                OnPropertyChanged(nameof(endDate));
+                OnPropertyChanged();
             }
         }
     }

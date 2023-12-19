@@ -41,6 +41,18 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             return await Database.Table<Class>().Where(c=>c.TermId == termID).ToListAsync();
         }
 
+        public async Task<List<Assessment>> GetAssessmentsAsync(int classID)
+        {
+            await Init();
+            return await Database.Table<Assessment>().Where(c => c.ClassId == classID).ToListAsync();
+        }
+
+        public async Task<Assessment> GetSingleAssessmentAsync(int assessmentID)
+        {
+            await Init();
+            return await Database.Table<Assessment>().Where(c => c.Id == assessmentID).FirstOrDefaultAsync();
+        }
+
         public async Task<Class> GetSingleClass(int classID)
         {
             await Init(); 
