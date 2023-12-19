@@ -129,6 +129,13 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             int ret = await Database.DeleteAsync(currentClass);
             return ret; 
         }
+
+        public async Task<int> DeleteAssessmentAsync(Assessment currentAssessment)
+        {
+            await Init(); 
+            int ret = await Database.DeleteAsync(currentAssessment);
+            return ret;
+        }
     }
 
 }

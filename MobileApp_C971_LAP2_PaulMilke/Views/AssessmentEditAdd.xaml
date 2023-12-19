@@ -116,6 +116,13 @@
                         Margin="5"
                         IsVisible="{Binding IsAdding, Converter={StaticResource InverseBooleanConverter}}"
                         Command="{Binding EditAssessmentCommand}"/>
+
+                <Button Grid.Row="6" Grid.Column="0"
+                        Text="Delete Assessment"
+                        Margin="5"
+                        BackgroundColor="DarkRed"
+                        IsVisible="{Binding IsAdding, Converter={StaticResource InverseBooleanConverter}}"
+                        Command="{Binding DeleteAssessmentCommand}"/>
             </Grid>
         </ScrollView>
     </ContentPage.Content>

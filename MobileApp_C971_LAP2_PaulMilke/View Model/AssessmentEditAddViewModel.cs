@@ -20,6 +20,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
         private readonly Services.INotificationService notificationService;
         public ICommand AddAssessmentCommand { get; }
         public ICommand EditAssessmentCommand { get; }
+        public ICommand DeleteAssessmentCommand { get; }
 
         private int classID;
         public int ClassID
@@ -85,6 +86,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
             currentAssessment = new Assessment();
             AddAssessmentCommand = new Command(async () => await AddAssessment());
             EditAssessmentCommand = new Command(SwapIsAdding);
+            DeleteAssessmentCommand = new Command(async () => await DeleteAssessment());
             SetValues();
         }
 
@@ -115,6 +117,11 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
         private void SwapIsAdding()
         {
             IsAdding = true; 
+        }
+
+        public async Task DeleteAssessment()
+        {
+            await schoolDatabase.DeleteAssessmentAsync(CurrentAssessment); 
         }
 
         public async Task AddAssessment()
