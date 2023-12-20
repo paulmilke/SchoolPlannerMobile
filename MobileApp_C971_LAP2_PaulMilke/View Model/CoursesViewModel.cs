@@ -29,7 +29,18 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
             set
             {
                 isEnabled = value;
-                OnPropertyChanged(nameof(IsEnabled));
+                OnPropertyChanged();
+            }
+        }
+
+        private bool isEmpty;
+        public bool IsEmpty
+        {
+            get => isEmpty;
+            set
+            {
+                isEnabled = value;
+                OnPropertyChanged();
             }
         }
 
@@ -40,7 +51,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
             set
             {
                 isVisible = value;
-                OnPropertyChanged(nameof(IsVisible));
+                OnPropertyChanged();
             }
         }
 
@@ -69,10 +80,15 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
                 ClassList.Add(newTile);
             }
 
+            if (ClassList.Count < 1) 
+            {
+                await App.Current.MainPage.DisplayAlert("New Term!", "Add classes using the button below", "Okay");
+            }
+
             if (ClassList.Count == 6)
             {
                 IsEnabled = false;
-                IsVisible = true; 
+                IsVisible = true;
             }
             else
             {

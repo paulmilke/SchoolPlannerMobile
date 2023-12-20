@@ -72,12 +72,12 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             else
             {
                 int ret = await Database.InsertAsync(term);
-                for (int i = 0; i < 6; i++)
+                /*for (int i = 0; i < 6; i++)
                 {
                     int d = i + 1;
                     Class c = new Class(term.Id, $"Class {d}");
                     await SaveClassAsync(c);
-                }
+                }*/
 
                 WeakReferenceMessenger.Default.Send(new TermUpdateMessage());
                 return ret;
