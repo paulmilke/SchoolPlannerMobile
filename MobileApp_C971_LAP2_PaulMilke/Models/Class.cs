@@ -38,9 +38,8 @@ namespace MobileApp_C971_LAP2_PaulMilke.Models
             EndDate = DateTime.Now;
         }
 
-        public Class(int id, int termId, string className, DateTime startDate, DateTime endDate, string status, string instructorName, string instructorPhone, string instructorEmail, string notes)
+        public Class(int termId, string className, DateTime startDate, DateTime endDate, string status, string instructorName, string instructorPhone, string instructorEmail)
         {
-            Id = id;
             TermId = termId;
             ClassName = className;
             StartDate = startDate;
@@ -49,7 +48,6 @@ namespace MobileApp_C971_LAP2_PaulMilke.Models
             InstructorName = instructorName;
             InstructorPhone = instructorPhone;
             InstructorEmail = instructorEmail;
-            Notes = notes;
         }
     }
 }

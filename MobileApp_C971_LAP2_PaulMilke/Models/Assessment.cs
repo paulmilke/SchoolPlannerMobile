@@ -28,6 +28,14 @@ namespace MobileApp_C971_LAP2_PaulMilke.Models
 
         }
 
+        public Assessment(int classId, string assessmentName, string assessmentType, DateTime startDate, DateTime endDate)
+        {
+            ClassId = classId;
+            AssessmentName = assessmentName;
+            AssessmentType = assessmentType;
+            StartDate = startDate;
+            EndDate = endDate;
+        }
     }
 
 

@@ -64,17 +64,6 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
             }
         }
 
-        private bool isEmpty;
-        public bool IsEmpty
-        {
-            get => isEmpty;
-            set
-            {
-                isEnabled = value;
-                OnPropertyChanged();
-            }
-        }
-
         private bool isVisible;
         public bool IsVisible
         {

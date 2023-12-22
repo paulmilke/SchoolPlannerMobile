@@ -7,13 +7,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Xamarin.Google.Crypto.Tink.Subtle;
 
 namespace MobileApp_C971_LAP2_PaulMilke.Services
 {
     public class SchoolDatabase
     {
-        SQLiteAsyncConnection Database; 
+        SQLiteAsyncConnection Database;
+
 
         public SchoolDatabase()
         {
@@ -21,13 +21,78 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
 
         async Task Init()
         {
-            if (Database is not null)
+             if (Database is not null)
                 return;
 
             Database = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
-            var result = await Database.CreateTableAsync<Term>();
-            var resultClass = await Database.CreateTableAsync<Class>();
-            var resultAssessment=await Database.CreateTableAsync<Assessment>();
+            bool dbExists = File.Exists(Constants.DatabasePath);
+            if (!dbExists)
+            {
+                // Create tables if the database does not exist
+                await Database.CreateTableAsync<Term>();
+                await Database.CreateTableAsync<Class>();
+                await Database.CreateTableAsync<Assessment>();
+                await PopulateTestData(); 
+            }
+
+        }
+
+
+
+        public async Task PopulateTestData()
+        {
+            Term testTerm = new Term("Test Term", new DateTime(2024,1,1), new DateTime(2024,5,1));
+            int termID = await SaveTestTermAsync(testTerm);
+            Class testClass = new Class(termID, "Test Course", new DateTime(2024, 1, 1), new DateTime(2024, 5, 1), "Plan to Take", "Anika Patel", "555-123-4567", "anika.patel@strimeuniversity.edu");
+            int classID = await SaveTestClassAsync(testClass);
+            Assessment performanceAssessment = new Assessment(classID, "Test - My Peformance Assessment", "Performance Assessment", new DateTime(2024, 1, 1), new DateTime(2024, 5, 1));
+            Assessment objectiveAssessment = new Assessment(classID, "Test - My Objective Assessment", "Objective Assessment", new DateTime(2024, 1, 1), new DateTime(2024, 5, 1));
+            await SaveTestAssessmentAsync(performanceAssessment);
+            await SaveTestAssessmentAsync(objectiveAssessment); 
+        }
+
+        public async Task<int> SaveTestTermAsync(Term term)
+        {
+            if (term.Id != 0)
+            {
+                await Database.UpdateAsync(term);
+            }
+
+            else
+            {
+                await Database.InsertAsync(term);
+
+            }
+            return term.Id;
+        }
+
+        public async Task<int> SaveTestClassAsync(Class newClass)
+        {
+            if (newClass.Id != 0)
+            {
+                await Database.UpdateAsync(newClass);
+
+            }
+            else
+            {
+                await Database.InsertAsync(newClass);
+
+            }
+            return newClass.Id;
+        }
+
+        public async Task<int> SaveTestAssessmentAsync(Assessment newAssessment)
+        {
+            if (newAssessment.Id != 0)
+            {
+                int ret = await Database.UpdateAsync(newAssessment);
+                return ret;
+            }
+            else
+            {
+                int ret = await Database.InsertAsync(newAssessment);
+                return ret;
+            }
         }
 
         public async Task<List<Term>> GetTermsAsync()
@@ -71,19 +136,18 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             await Init();
             if (term.Id != 0)
             {
-                int ret = await Database.UpdateAsync(term);
+                await Database.UpdateAsync(term);
                 WeakReferenceMessenger.Default.Send(new TermUpdateMessage());
-                return ret;
             }
 
             else
             {
-                int ret = await Database.InsertAsync(term);
+                await Database.InsertAsync(term);
 
                 WeakReferenceMessenger.Default.Send(new TermUpdateMessage());
-                return ret;
+                
             }
-
+            return term.Id; 
         }
 
         public async Task<int> SaveClassAsync(Class newClass)
@@ -91,14 +155,15 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             await Init(); 
             if (newClass.Id != 0)
             {
-                int ret = await Database.UpdateAsync(newClass);
-                return ret; 
+                await Database.UpdateAsync(newClass);
+
             }
             else
             {
-                int ret = await Database.InsertAsync(newClass);
-                return ret; 
+                await Database.InsertAsync(newClass);
+
             }
+            return newClass.Id; 
         }
 
         public async Task<int> SaveAssessmentAsync(Assessment newAssessment)
