@@ -22,6 +22,37 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
             }
         }
 
+        private string termTitle; 
+        public string TermTitle
+        {
+            get => termTitle; 
+            set
+            {
+                termTitle = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private DateTime termStart; 
+        public DateTime TermStart
+        {
+            get => termStart; set
+            {
+                termStart = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private DateTime termEnd;
+        public DateTime TermEnd
+        {
+            get => termEnd; set
+            {
+                termEnd = value;
+                OnPropertyChanged();
+            }
+        }
+
         private bool isEnabled; 
         public bool IsEnabled
         {
@@ -68,6 +99,10 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
         public async Task InitializeAsync()
         {
             await RefreshTiles();
+            Term currentTerm = await schoolDatabase.GetSingleTermAsync(TermId);
+            TermTitle = currentTerm.Title;
+            TermStart = currentTerm.Start;
+            TermEnd = currentTerm.End;  
         }
 
         public async Task RefreshTiles()

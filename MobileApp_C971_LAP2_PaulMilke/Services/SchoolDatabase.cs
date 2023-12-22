@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Google.Crypto.Tink.Subtle;
 
 namespace MobileApp_C971_LAP2_PaulMilke.Services
 {
@@ -33,6 +34,12 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
         {
             await Init(); 
             return await Database.Table<Term>().ToListAsync();
+        }
+
+        public async Task<Term> GetSingleTermAsync(int termID)
+        {
+            await Init(); 
+            return await Database.Table<Term>().Where(t=>t.Id == termID).FirstOrDefaultAsync();
         }
 
         public async Task<List<Class>> GetClassesAsync(int termID)
@@ -72,12 +79,6 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             else
             {
                 int ret = await Database.InsertAsync(term);
-                /*for (int i = 0; i < 6; i++)
-                {
-                    int d = i + 1;
-                    Class c = new Class(term.Id, $"Class {d}");
-                    await SaveClassAsync(c);
-                }*/
 
                 WeakReferenceMessenger.Default.Send(new TermUpdateMessage());
                 return ret;
@@ -118,6 +119,25 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
         public async Task<int> DeleteTermAsync(Term term)
         {
             await Init();
+
+
+            //Find Classes associated with term 
+            List<Class> classList = await GetClassesAsync(term.Id);
+            foreach (var items in classList)
+            {
+                //For each class find and delete assessments. 
+                List<Assessment> assessments = await GetAssessmentsAsync(items.Id);
+                foreach(Assessment item in assessments)
+                {
+                    await DeleteAssessmentAsync(item);
+                }
+            }
+            //After deleting assessments, delete the classes. 
+            foreach (var item in classList)
+            {
+                await DeleteClassAsync(item);
+            }
+            //Finally delete the term. 
             int ret = await Database.DeleteAsync(term);
             WeakReferenceMessenger.Default.Send(new TermUpdateMessage());
             return ret;
@@ -126,6 +146,14 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
         public async Task<int> DeleteClassAsync(Class currentClass)
         {
             await Init();
+
+            //Find assessments for the class and loop through to delete them.
+            List<Assessment> assessments = await GetAssessmentsAsync(currentClass.Id);
+            foreach (Assessment item in assessments)
+            {
+                await DeleteAssessmentAsync(item);
+            }
+            //Then delete the class. 
             int ret = await Database.DeleteAsync(currentClass);
             return ret; 
         }

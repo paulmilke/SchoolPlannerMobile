@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Plugin.LocalNotification;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace MobileApp_C971_LAP2_PaulMilke.View_Model
 {
@@ -121,18 +122,39 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
 
         public async Task DeleteAssessment()
         {
-            await schoolDatabase.DeleteAssessmentAsync(CurrentAssessment); 
+            await schoolDatabase.DeleteAssessmentAsync(CurrentAssessment);
+            await NavigateBack(); 
         }
 
         public async Task AddAssessment()
         {
+            
             CurrentAssessment.ClassId = ClassID; 
             CurrentAssessment.AssessmentName = AssessmentName;
             CurrentAssessment.AssessmentType = AssessmentType;
             CurrentAssessment.StartDate = StartDate;
             CurrentAssessment.EndDate = EndDate;
-            await schoolDatabase.SaveAssessmentAsync(CurrentAssessment);
-            await ScheduleAssessmentNotificationsAsync(); 
+            if(AssessmentName == null)
+            {
+                await App.Current.MainPage.DisplayAlert("Alert", "Assessment must have a title.", "Okay");
+            }
+            else if(StartDate.Date == EndDate.Date || StartDate > EndDate)
+            {
+                await App.Current.MainPage.DisplayAlert("Alert", "The start date must be before the end date.", "Okay");
+            }
+            else
+            {
+                await schoolDatabase.SaveAssessmentAsync(CurrentAssessment);
+                await ScheduleAssessmentNotificationsAsync();
+                await NavigateBack(); 
+            }
+
+        }
+
+        public async Task NavigateBack()
+        {
+            var navigationService = new NavigationService();
+            await navigationService.GoBackAsync(); 
         }
 
         public async Task ScheduleAssessmentNotificationsAsync()
