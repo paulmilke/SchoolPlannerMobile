@@ -13,7 +13,6 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
     public class MainPageViewModel : BaseViewModel
     {
         private readonly SchoolDatabase _schoolDatabase;
-        //public Term test = new Term("Paul", DateTime.Now, DateTime.Now);
         public ObservableCollection<TermTile> TermList { get; set; } = new ObservableCollection<TermTile>();
 
         public MainPageViewModel(INavigationService navigationService) : base(navigationService)
@@ -26,6 +25,8 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
                 await RefreshTiles();
             });
         }
+
+
     
 
         private async Task InitAsync()
@@ -43,8 +44,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
             {
                 TermTile tile = new TermTile { TermData = term };
                 TermList.Add(tile);
-            }
-
+            } 
 
         }
 
