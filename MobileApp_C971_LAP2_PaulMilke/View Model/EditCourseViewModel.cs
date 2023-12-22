@@ -1,6 +1,7 @@
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Maui.ApplicationModel.Communication;
 using MobileApp_C971_LAP2_PaulMilke.Models;
 using MobileApp_C971_LAP2_PaulMilke.Services;
 using MobileApp_C971_LAP2_PaulMilke.Views;
@@ -9,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 
 
@@ -126,14 +128,16 @@ public class EditCourseViewModel : BaseViewModel
     public async Task InitializeAsync()
 	{
 		await LoadClassInfo();
-		UpdateBindedProperties();
+
 	}
 
 	public async Task LoadClassInfo()
 	{
 		AssessmentTiles.Clear();
 		CurrentClass = await schoolDatabase.GetSingleClass(ClassID);
-		var list = await schoolDatabase.GetAssessmentsAsync(ClassID);
+        UpdateBindedProperties();
+
+        var list = await schoolDatabase.GetAssessmentsAsync(ClassID);
 
         IsPerformance = true;
         IsObjective = true;
@@ -157,30 +161,102 @@ public class EditCourseViewModel : BaseViewModel
 
 	public void UpdateBindedProperties()
 	{
-		CourseName = CurrentClass?.ClassName ?? "Loading...";
+		CourseName = CurrentClass?.ClassName;
 		Start = CurrentClass?.StartDate ?? DateTime.Today;
         End = CurrentClass?.EndDate ?? DateTime.Today;
-		Status = CurrentClass?.Status ?? "Loading...";
-		InstructorName = CurrentClass?.InstructorName ?? "Loading...";
-		InstructorEmail = CurrentClass?.InstructorEmail ?? "Loading...";
-		InstructorPhone = CurrentClass?.InstructorPhone ?? "Loading...";
-		ClassNotes = CurrentClass?.Notes ?? "Loading...";
+		Status = CurrentClass?.Status;
+		InstructorName = CurrentClass?.InstructorName;
+		InstructorEmail = CurrentClass?.InstructorEmail;
+		InstructorPhone = CurrentClass?.InstructorPhone;
+		ClassNotes = CurrentClass?.Notes;
+
+		if(CourseName == "New Class") 
+		{
+			IsEditing = true;
+		}
     }
 
 	public async Task UpdateClass()
 	{
-		CurrentClass.ClassName = CourseName;
-		CurrentClass.StartDate = Start;
-		CurrentClass.EndDate = End; 
-		CurrentClass.Status = Status;
-		CurrentClass.InstructorName = InstructorName;
-		CurrentClass.InstructorEmail = InstructorEmail;
-		CurrentClass.InstructorPhone = InstructorPhone;
-		CurrentClass.Notes = ClassNotes;
-		await schoolDatabase.SaveClassAsync(CurrentClass); 
-		ToggleEditCommand.Execute(this);
-		await ScheduleClassNotificationAsync();
+        CurrentClass.ClassName = CourseName;
+        CurrentClass.StartDate = Start;
+        CurrentClass.EndDate = End;
+        CurrentClass.Status = Status;
+        CurrentClass.InstructorName = InstructorName;
+        CurrentClass.InstructorEmail = InstructorEmail;
+        CurrentClass.InstructorPhone = InstructorPhone;
+        CurrentClass.Notes = ClassNotes;
 
+        if (ValidateEntryValues() == true)
+		{
+
+            await schoolDatabase.SaveClassAsync(CurrentClass);
+            ToggleEditCommand.Execute(this);
+            await ScheduleClassNotificationAsync();
+        }
+		else
+		{
+			//display alert here
+		}
+
+	}
+
+	private bool ValidateEntryValues()
+	{
+		if (string.IsNullOrWhiteSpace(CourseName))
+        {
+			DisplayAlert("the title");
+			return false; 
+		}
+        else if (CourseName == "New Class")
+		{
+			App.Current.MainPage.DisplayAlert("Alert", "Please change course name to something other than 'New Class'", "Okay");
+			return false; 
+		}
+		else if (Start.Date == End.Date || Start.Date > End.Date)
+		{
+			DisplayAlert("start and end dates");
+			return false; 
+		}
+		else if (Status == null)
+		{
+			DisplayAlert("course status");
+			return false; 
+		}
+		else if(InstructorEmail == null || InstructorName == null || InstructorPhone == null) 
+		{
+			DisplayAlert("instructor information");
+			return false; 
+		}
+		else if(ValidateEmail() == false)
+		{
+			DisplayAlert("instructor email");
+			return false; 
+		}
+		else
+		{
+			return true; 
+		}
+
+	}
+
+	private bool ValidateEmail()
+	{
+        try
+        {
+            return Regex.IsMatch(InstructorEmail,
+                @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
+                RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
+        }
+        catch (RegexMatchTimeoutException)
+        {
+            return false;
+        }
+    }
+
+	private async void DisplayAlert(string message)
+	{
+		await App.Current.MainPage.DisplayAlert("Alert", $"Please check {message} for errors.", "Okay");
 	}
 
 	public async Task ScheduleClassNotificationAsync()

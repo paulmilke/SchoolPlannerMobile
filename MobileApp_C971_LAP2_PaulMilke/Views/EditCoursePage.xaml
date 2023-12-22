@@ -127,6 +127,25 @@
                    Text="{Binding Status}"
                    IsVisible="{Binding IsEditing, Converter={StaticResource InverseBooleanConverter}}"
                    Style="{StaticResource infoLabel}"/>
+
+                    <Picker Grid.Row="1" Grid.Column="2"
+                        x:Name="statusPicker"
+                        Title="Select Class Status"
+                        SelectedItem="{Binding Status, Mode=TwoWay}"
+                        IsVisible="{Binding IsEditing}"
+                        FontSize="15" 
+                        Margin="5"
+                        HorizontalTextAlignment="Center">
+                        <Picker.ItemsSource>
+                            <x:Array Type="{x:Type x:String}">
+                                <x:String>Plan to Take</x:String>
+                                <x:String>In Progress</x:String>
+                                <x:String>Completed</x:String>
+                                <x:String>Dropped</x:String>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
+                    
                 </Grid>
 
 
@@ -281,20 +300,7 @@
                    FontSize="15" 
                    Margin="5"/>
 
-                <Picker Grid.Row="7" Grid.Column="0"
-                    x:Name="statusPicker"
-                    Title="Select Class Status"
-                    SelectedItem="{Binding Status, Mode=TwoWay}"
-                    IsVisible="{Binding IsEditing}">
-                    <Picker.ItemsSource>
-                        <x:Array Type="{x:Type x:String}">
-                            <x:String>Plan to Take</x:String>
-                            <x:String>In Progress</x:String>
-                            <x:String>Completed</x:String>
-                            <x:String>Dropped</x:String>
-                        </x:Array>
-                    </Picker.ItemsSource>
-                </Picker>
+                
 
                 <Entry Grid.Row="10" Grid.Column="0"
                    Text="{Binding InstructorName, Mode=TwoWay}"

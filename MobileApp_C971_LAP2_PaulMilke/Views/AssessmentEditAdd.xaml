@@ -84,7 +84,7 @@
                            Style="{StaticResource labelStyle}"/>
 
                     <Label Grid.Row="1" Grid.Column="0"
-                           Text="{Binding StartDate}"
+                           Text="{Binding StartDate, StringFormat='{0:MM/dd/yyy}'}"
                            Style="{StaticResource infoLabel}"
                            IsVisible="{Binding IsAdding, Converter={StaticResource InverseBooleanConverter}}"/>
 
@@ -94,7 +94,7 @@
                            Style="{StaticResource infoLabel}"/>
 
                     <Label Grid.Row="1" Grid.Column="1"
-                           Text="{Binding EndDate}"
+                           Text="{Binding EndDate, StringFormat='{0:MM/dd/yyy}'}"
                            Style="{StaticResource infoLabel}"
                            IsVisible="{Binding IsAdding, Converter={StaticResource InverseBooleanConverter}}"/>
 

@@ -7,7 +7,7 @@ public partial class AddNewTermPopup : Popup
 {
 	public AddNewTermPopup(AddNewTermPopupViewModel viewModel)
 	{
-		InitializeComponent();
+        InitializeComponent();
 		this.BindingContext = viewModel;
 	}
 
@@ -15,5 +15,7 @@ public partial class AddNewTermPopup : Popup
 	{
 		this.CloseAsync(); 
 	}
+
+
 
 }

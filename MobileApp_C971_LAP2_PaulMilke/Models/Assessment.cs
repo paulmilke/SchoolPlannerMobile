@@ -1,6 +1,9 @@
 ﻿using SQLite;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using MobileApp_C971_LAP2_PaulMilke.Controls;
+using MobileApp_C971_LAP2_PaulMilke.Models; 
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
