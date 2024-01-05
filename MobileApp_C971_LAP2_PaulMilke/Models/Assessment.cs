@@ -38,5 +38,29 @@ namespace MobileApp_C971_LAP2_PaulMilke.Models
         }
     }
 
+    public class PerformanceAssessment : Assessment
+    {
+        public PerformanceAssessment() : base()
+        {
+            AssessmentType = "Performance Assessment"; 
+        }
+        public PerformanceAssessment(int classId, string assessmentName, DateTime startDate, DateTime endDate) : base(classId, assessmentName, "Performance Assessment", startDate, endDate) 
+        {
+
+        }
+    }
+
+    public class ObjectiveAssessment : Assessment
+    {
+        public ObjectiveAssessment() : base()
+        {
+            AssessmentType = "Objective Assessment"; 
+        }
+        public ObjectiveAssessment(int classId, string assessmentName, DateTime startDate, DateTime endDate) : base(classId, assessmentName, "Objective Assessment", startDate, endDate)
+        {
+
+        }
+    }
+
 
 }
