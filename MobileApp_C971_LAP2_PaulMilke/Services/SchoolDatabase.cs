@@ -229,6 +229,18 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             int ret = await Database.DeleteAsync(currentAssessment);
             return ret;
         }
+
+        public async Task<List<Term>> SearchTerms(string searchItem)
+        {
+            await Init();
+            return await Database.Table<Term>().Where(t => t.Title.ToLower().Contains(searchItem.ToLower())).ToListAsync();
+        }
+
+        public async Task<List<Class>> SearchClasses(string searchItem)
+        {
+            await Init();
+            return await Database.Table<Class>().Where(c => c.ClassName.ToLower().Contains(searchItem.ToLower())).ToListAsync(); 
+        }
     }
 
 }

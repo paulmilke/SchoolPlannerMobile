@@ -1,5 +1,4 @@
-﻿using MobileApp_C971_LAP2_PaulMilke.Controls;
-using MobileApp_C971_LAP2_PaulMilke.Services;
+﻿using MobileApp_C971_LAP2_PaulMilke.Services;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using MobileApp_C971_LAP2_PaulMilke.Views;
@@ -49,6 +48,13 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
         }
 
         public ICommand NavigateToCoursesCommand => new Command<int>(async (termId) => await NavigateToCourses(termId));
+        public ICommand NavigateToSearchCommand => new Command(async (async) => await NavigateToSearch());
+
+        private async Task NavigateToSearch()
+        {
+            var navigationService = new NavigationService();
+            await navigationService.NavigateToAsync(nameof(SearchPage)); 
+        }
 
         public async Task NavigateToCourses(int termId)
         {

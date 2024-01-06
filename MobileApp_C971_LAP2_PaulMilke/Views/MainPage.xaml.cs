@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.Messaging;
-using MobileApp_C971_LAP2_PaulMilke.Controls;
 using MobileApp_C971_LAP2_PaulMilke.Services;
 using MobileApp_C971_LAP2_PaulMilke.View_Model;
 using MobileApp_C971_LAP2_PaulMilke.Views;

@@ -37,7 +37,10 @@ namespace MobileApp_C971_LAP2_PaulMilke
             builder.Services.AddTransient<EditCourseViewModel>();
 
             builder.Services.AddTransient<AssessmentEditAdd>();
-            builder.Services.AddTransient<AssessmentEditAddViewModel>(); 
+            builder.Services.AddTransient<AssessmentEditAddViewModel>();
+
+            builder.Services.AddTransient<SearchPage>();
+            builder.Services.AddTransient<SearchPageViewModel>(); 
 
             builder.Services.AddTransient<AddNewTermPopupViewModel>();
 
