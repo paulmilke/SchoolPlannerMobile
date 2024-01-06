@@ -4,7 +4,7 @@ using MobileApp_C971_LAP2_PaulMilke.Services;
 using MobileApp_C971_LAP2_PaulMilke.View_Model;
 using System.Windows.Input;
 
-namespace MobileApp_C971_LAP2_PaulMilke.Controls
+namespace MobileApp_C971_LAP2_PaulMilke.Models
 {
     public class TermTile : Frame
     {

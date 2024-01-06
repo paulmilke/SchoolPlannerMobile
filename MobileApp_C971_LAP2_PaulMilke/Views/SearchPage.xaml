@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Name="searchPageInstance"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:MobileApp_C971_LAP2_PaulMilke.Models"
+             x:Class="MobileApp_C971_LAP2_PaulMilke.Views.SearchPage"
+             Title="SearchPage">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Entry Grid.Row="0" Grid.Column="0"
+                   Placeholder="Enter Search Item"
+                   Margin="10,5,10,5"
+                   Text="{Binding SearchItem, Mode=TwoWay}"/>
+
+            <Grid Grid.Row="1" Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Row="0" Grid.Column="0"
+                        Text="Search Terms"
+                        Margin="10,5,10,5"
+                        Command="{Binding SearchTermsCommand}"/>
+
+                <Button Grid.Row="0" Grid.Column="1"
+                        Text="Search Courses"
+                        Margin="10,5,10,5"
+                        Command="{Binding SearchCoursesCommand}"/>
+            </Grid>
+
+            <BoxView Grid.Row="2" Grid.Column="0"
+                     HeightRequest="2"
+                     BackgroundColor="Gray"
+                     HorizontalOptions="FillAndExpand"
+                     Color="Gray"
+                     Margin="10,5,10,5"/>
+
+            <CollectionView Grid.Row="3" ItemsSource="{Binding TermResults}" IsVisible="{Binding ShowTerms}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <local:TermTile TermData="{Binding TermData}"
+                                        TileCommand="{Binding Source={x:Reference searchPageInstance}, Path=BindingContext.NavigateToCoursesCommand}"/>
+
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <CollectionView Grid.Row="3" ItemsSource="{Binding ClassResults}" IsVisible="{Binding ShowClasses}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <local:ClassTile ClassData="{Binding ClassData}"
+                                        ClassTileCommand="{Binding Source={x:Reference searchPageInstance}, Path=BindingContext.NavigateToEditCourseCommand}"/>
+
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </Grid>
+    </ContentPage.Content>
+    
+</ContentPage>
