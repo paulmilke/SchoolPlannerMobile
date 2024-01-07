@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MobileApp_C971_LAP2_PaulMilke.Views.ReportsPage"
+             Title="ReportsPage">
+
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Row="0" Grid.Column="0"
+                    Text="Completed Courses"
+                    Margin="10,10,10,10"
+                    Command="{Binding CompletedCoursesCommand}"/>
+
+            <Button Grid.Row="1" Grid.Column="0"
+                    Text="Upcoming Courses"
+                    Margin="10,0,10,10"
+                    Command="{Binding UpcomingCoursesCommand}"/>
+            
+            <Label Grid.Row="2" Grid.Column="0"
+                   Text="{Binding ReportTitle}"
+                   Margin="10,5,5,5"
+                   FontSize="Subtitle"
+                   HorizontalOptions="Center"
+                   FontAttributes="Bold"/>
+
+            <Grid Grid.Row="3" IsVisible="{Binding IsVisible}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Text="Class Name" 
+                       Margin="10,5,5,5"
+                       FontSize="Micro"
+                       FontAttributes="Bold"/>
+                <Label Grid.Column="1" Text="Class Status" 
+                       Margin="10,5,5,5"
+                       FontSize="Micro"
+                       FontAttributes="Bold"/>
+                <Label Grid.Column="2" Text="Started" 
+                       Margin="10,5,5,5"
+                       FontSize="Micro"
+                       FontAttributes="Bold"/>
+                <Label Grid.Column="3" Text="Completed" 
+                       Margin="10,5,5,5"
+                       FontSize="Micro"
+                       FontAttributes="Bold"/>
+                <Label Grid.Column="4" Text="Instructor" 
+                       Margin="10,5,5,5"
+                       FontSize="Micro"
+                       FontAttributes="Bold"/>
+            </Grid>  
+
+            <CollectionView Grid.Row="4" Grid.Column="0" ItemsSource="{Binding ClassList}">
+                <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid RowSpacing="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                                <!-- Define other columns -->
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Text="{Binding ClassName}" 
+                               Margin="10,5,5,5"
+                               FontSize="Micro"
+                               FontAttributes="Bold"/>
+                        <Label Grid.Column="1" Text="{Binding Status}" 
+                               Margin="10,5,5,5"
+                               FontSize="Micro"
+                                FontAttributes="Bold"/>
+                            <Label Grid.Column="2" Text="{Binding StartDate,  StringFormat='{0:MM/dd/yyy}'}" 
+                                Margin="10,5,5,5"
+                                FontSize="Micro"
+                                FontAttributes="Bold"/>
+                            <Label Grid.Column="3" Text="{Binding EndDate,  StringFormat='{0:MM/dd/yyy}'}" 
+                                Margin="10,5,5,5"
+                                FontSize="Micro"
+                                FontAttributes="Bold"/>
+                        <Label Grid.Column="4" Text="{Binding InstructorName}" 
+                                 Margin="10,5,5,5"
+                                FontSize="Micro"
+                                FontAttributes="Bold"/>
+                            <!-- Other data bindings -->
+                    </Grid>
+                </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </Grid>
+
+    </ContentPage.Content>
+    
+</ContentPage>

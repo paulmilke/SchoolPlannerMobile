@@ -241,6 +241,12 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             await Init();
             return await Database.Table<Class>().Where(c => c.ClassName.ToLower().Contains(searchItem.ToLower())).ToListAsync(); 
         }
+
+        public async Task<List<Class>> GetCompletedCoursesAsync(string completedStatus)
+        {
+            await Init();
+            return await Database.Table<Class>().Where(c => c.Status == completedStatus).ToListAsync();
+        }
     }
 
 }

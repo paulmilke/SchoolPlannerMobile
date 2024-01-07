@@ -49,7 +49,14 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
 
         public ICommand NavigateToCoursesCommand => new Command<int>(async (termId) => await NavigateToCourses(termId));
         public ICommand NavigateToSearchCommand => new Command(async (async) => await NavigateToSearch());
+        public ICommand NavigateToReportsCommand => new Command(async (async) => await NavigateToReports());
 
+
+        private async Task NavigateToReports()
+        {
+            var navigationService = new NavigationService();
+            await navigationService.NavigateToAsync(nameof(ReportsPage)); 
+        }
         private async Task NavigateToSearch()
         {
             var navigationService = new NavigationService();
