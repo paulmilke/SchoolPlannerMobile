@@ -14,6 +14,7 @@ namespace MobileApp_C971_LAP2_PaulMilke
             Routing.RegisterRoute(nameof(EditCoursePage), typeof(EditCoursePage));
             Routing.RegisterRoute(nameof(AssessmentEditAdd), typeof(AssessmentEditAdd));
             Routing.RegisterRoute(nameof(SearchPage), typeof(SearchPage));
+            Routing.RegisterRoute(nameof(ReportsPage), typeof(ReportsPage));
         }
     }
 }
