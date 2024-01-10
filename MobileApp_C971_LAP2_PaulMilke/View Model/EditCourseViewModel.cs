@@ -106,22 +106,19 @@ public class EditCourseViewModel : BaseViewModel
 
 	public async Task NavigateFromTiletoEdit(int assessmentID)
 	{
-        var navigationService = new NavigationService();
-		await navigationService.NavigateToAsync(nameof(AssessmentEditAdd), assessmentID);
+		await NavigationService.NavigateToAsync(nameof(AssessmentEditAdd), assessmentID);
     }
 
 	public async Task NavigateToAssessmentPerformance()
 	{
 		string assessment = "Performance Assessment"; 
-		var navigationService = new NavigationService(); 
-		await navigationService.NavigateToAsync(nameof(AssessmentEditAdd), assessment, true, ClassID);
-	}
+		await NavigationService.NavigateToAsync(nameof(AssessmentEditAdd), assessment, true, ClassID);
+    }
 
     public async Task NavigateToAssessmentObjective()
     {
         string assessment = "Objective Assessment";
-        var navigationService = new NavigationService();
-        await navigationService.NavigateToAsync(nameof(AssessmentEditAdd), assessment, true, ClassID);
+		await NavigationService.NavigateToAsync(nameof(AssessmentEditAdd), assessment, true, ClassID);
     }
 
 

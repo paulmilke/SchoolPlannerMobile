@@ -54,19 +54,16 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
 
         private async Task NavigateToReports()
         {
-            var navigationService = new NavigationService();
-            await navigationService.NavigateToAsync(nameof(ReportsPage)); 
+            await NavigationService.NavigateToAsync(nameof(ReportsPage));
         }
         private async Task NavigateToSearch()
         {
-            var navigationService = new NavigationService();
-            await navigationService.NavigateToAsync(nameof(SearchPage)); 
+            await NavigationService.NavigateToAsync(nameof(SearchPage));
         }
 
         public async Task NavigateToCourses(int termId)
         {
-            var navigationService = new NavigationService(); 
-            await navigationService.NavigateToAsync(nameof(CoursesPage), termId);
+            await NavigationService.NavigateToAsync(nameof(CoursesPage), termId);
         }
 
         ~MainPageViewModel()

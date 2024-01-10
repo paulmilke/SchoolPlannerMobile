@@ -130,8 +130,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
 
         public async Task NavigateToEditCourse(int classID)
         {
-            var navigationService = new NavigationService();
-            await navigationService.NavigateToAsync(nameof(EditCoursePage), classID);
+            await NavigationService.NavigateToAsync(nameof(EditCoursePage), classID);
         }
     }
 }
