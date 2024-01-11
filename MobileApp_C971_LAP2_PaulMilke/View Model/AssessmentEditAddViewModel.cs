@@ -109,8 +109,8 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
             }
             else
             {
-                StartDate = DateTime.Now;
-                EndDate = DateTime.Now;
+                StartDate = DateTime.Today;
+                EndDate = DateTime.Today;
             }
 
         }
@@ -153,8 +153,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
 
         public async Task NavigateBack()
         {
-            var navigationService = new NavigationService();
-            await navigationService.GoBackAsync(); 
+            await NavigationService.GoBackAsync(); 
         }
 
         public async Task ScheduleAssessmentNotificationsAsync()
