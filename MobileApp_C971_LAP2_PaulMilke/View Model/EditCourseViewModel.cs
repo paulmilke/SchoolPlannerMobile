@@ -193,16 +193,16 @@ public class EditCourseViewModel : BaseViewModel
         }
 		else
 		{
-			//display alert here
+			DisplayAlert();
 		}
 
 	}
 
-	private bool ValidateEntryValues()
+	public bool ValidateEntryValues()
 	{
 		if (string.IsNullOrWhiteSpace(CourseName))
         {
-			DisplayAlert("the title");
+			AlertMessage = "the title";
 			return false; 
 		}
         else if (CourseName == "New Class")
@@ -212,22 +212,22 @@ public class EditCourseViewModel : BaseViewModel
 		}
 		else if (Start.Date == End.Date || Start.Date > End.Date)
 		{
-			DisplayAlert("start and end dates");
+			AlertMessage = "start and end dates";
 			return false; 
 		}
 		else if (Status == null)
 		{
-			DisplayAlert("course status");
+			AlertMessage = "course status";
 			return false; 
 		}
 		else if(InstructorEmail == null || InstructorName == null || InstructorPhone == null) 
 		{
-			DisplayAlert("instructor information");
+			AlertMessage = "instructor information";
 			return false; 
 		}
 		else if(ValidateEmail() == false)
 		{
-			DisplayAlert("instructor email");
+			AlertMessage = "instructor email";
 			return false; 
 		}
 		else
@@ -237,7 +237,7 @@ public class EditCourseViewModel : BaseViewModel
 
 	}
 
-	private bool ValidateEmail()
+	public bool ValidateEmail()
 	{
         try
         {
@@ -251,9 +251,9 @@ public class EditCourseViewModel : BaseViewModel
         }
     }
 
-	private async void DisplayAlert(string message)
+	private async void DisplayAlert()
 	{
-		await App.Current.MainPage.DisplayAlert("Alert", $"Please check {message} for errors.", "Okay");
+		await App.Current.MainPage.DisplayAlert("Alert", $"Please check {AlertMessage} for errors.", "Okay");
 	}
 
 	public async Task ScheduleClassNotificationAsync()
@@ -348,6 +348,16 @@ public class EditCourseViewModel : BaseViewModel
         });
     }
 
+	private string alertMessage;
+	public string AlertMessage
+	{
+		get => alertMessage;
+		set
+		{
+			alertMessage = value;
+			OnPropertyChanged(); 
+		}
+	}
 
 	//Properties for the course in question. 
     private string courseName; 
