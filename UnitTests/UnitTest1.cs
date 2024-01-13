@@ -25,7 +25,9 @@ namespace UnitTests
             var result = viewModel.ValidateEntryValues();
 
             // Assert
+            var expectedAlert = "the title";
             Assert.False(result);
+            Assert.Equal(expectedAlert, viewModel.AlertMessage);
         }
 
         [Fact]
@@ -47,7 +49,33 @@ namespace UnitTests
             var result = viewModel.ValidateEntryValues();
 
             // Assert
+            var expectedAlert = "start and end dates";
             Assert.False(result);
+            Assert.Equal(expectedAlert, viewModel.AlertMessage);
+        }
+
+        [Fact]
+        public void ValidateEntryValues_NullStatus()
+        {
+            // Arrange
+            var mockNavigationService = new Mock<INavigationService>();
+            var mockNotificationService = new Mock<INotificationService>();
+            var viewModel = new EditCourseViewModel(mockNavigationService.Object, mockNotificationService.Object);
+            viewModel.CourseName = "Name";
+            viewModel.Start = DateTime.Today;
+            viewModel.End = DateTime.Today.AddDays(1);
+            viewModel.Status = "";
+            viewModel.InstructorEmail = "myemail@gmail.com";
+            viewModel.InstructorName = "Name";
+            viewModel.InstructorPhone = "1234567";
+
+            // Act
+            var result = viewModel.ValidateEntryValues();
+
+            // Assert
+            var expectedAlert = "course status";
+            Assert.False(result);
+            Assert.Equal(expectedAlert, viewModel.AlertMessage);
         }
 
         [Fact]
@@ -61,7 +89,7 @@ namespace UnitTests
             viewModel.Start = DateTime.Today;
             viewModel.End = DateTime.Today.AddDays(1);
             viewModel.Status = "Completed";
-            viewModel.InstructorEmail = "";
+            viewModel.InstructorEmail = "mymail@gmail.com";
             viewModel.InstructorName = "";
             viewModel.InstructorPhone = "";
 
@@ -69,7 +97,9 @@ namespace UnitTests
             var result = viewModel.ValidateEntryValues();
 
             // Assert
+            var expectedAlert = "instructor information"; 
             Assert.False(result);
+            Assert.Equal(expectedAlert, viewModel.AlertMessage);
         }
 
         [Fact]
