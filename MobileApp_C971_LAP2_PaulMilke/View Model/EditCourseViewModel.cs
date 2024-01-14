@@ -215,12 +215,12 @@ public class EditCourseViewModel : BaseViewModel
 			AlertMessage = "start and end dates";
 			return false; 
 		}
-		else if (Status == null)
+		else if (string.IsNullOrWhiteSpace(Status))
 		{
 			AlertMessage = "course status";
 			return false; 
 		}
-		else if(InstructorEmail == null || InstructorName == null || InstructorPhone == null) 
+		else if(string.IsNullOrWhiteSpace(InstructorEmail) || string.IsNullOrWhiteSpace(InstructorName) || string.IsNullOrWhiteSpace(InstructorPhone)) 
 		{
 			AlertMessage = "instructor information";
 			return false; 
