@@ -1,6 +1,7 @@
 ﻿using Android.App;
 using Android.Content.PM;
 using Android.OS;
+using Microsoft.Maui;
 
 namespace MobileApp_C971_LAP2_PaulMilke
 {
