@@ -23,12 +23,12 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
         public async Task<List<Term>> RefreshTermsAsync()
         {
             Terms = new List<Term>();
-
-            //Uri uri = new Uri("http://10.0.2.2:5072/Term");
+            var url = DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:5072" : "http://localhost:5072";
+            Uri uri = new Uri($"{url}/Term");
 
             try
             {
-               HttpResponseMessage response = await _httpClient.GetAsync("http://10.0.2.2:5072/Term");
+               HttpResponseMessage response = await _httpClient.GetAsync(uri);
                 if (response.IsSuccessStatusCode) {
                     string responseString = await response.Content.ReadAsStringAsync(); 
                     Terms = JsonSerializer.Deserialize<List<Term>>(responseString, _serializerOptions);
