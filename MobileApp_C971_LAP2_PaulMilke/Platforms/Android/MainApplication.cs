@@ -12,7 +12,11 @@ using Android.Runtime;
 
 namespace MobileApp_C971_LAP2_PaulMilke
 {
+#if DEBUG
+    [Application(UsesCleartextTraffic = true)]
+#else
     [Application]
+#endif
     public class MainApplication : MauiApplication
     {
         public MainApplication(IntPtr handle, JniHandleOwnership ownership)
