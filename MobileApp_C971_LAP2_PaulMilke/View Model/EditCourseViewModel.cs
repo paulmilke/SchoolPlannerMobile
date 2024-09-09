@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
+using Microsoft.Maui.ApplicationModel.DataTransfer;
 
 
 namespace MobileApp_C971_LAP2_PaulMilke.View_Model;
