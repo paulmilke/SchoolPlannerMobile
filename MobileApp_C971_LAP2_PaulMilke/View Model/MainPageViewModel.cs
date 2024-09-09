@@ -37,7 +37,9 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
         private async Task RefreshTiles()
         {
             TermList.Clear(); 
-            var terms = await _schoolDatabase.GetTermsAsync();
+            //var terms = await _schoolDatabase.GetTermsAsync();
+            RestService restApi = new RestService();
+            var terms = await restApi.RefreshTermsAsync(); 
 
             foreach (Term term in terms)
             {
