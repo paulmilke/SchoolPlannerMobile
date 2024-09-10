@@ -13,7 +13,12 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
 
         public RestService() 
         {
+#if DEBUG
+            HttpClientService handler = new HttpClientService();
+            _httpClient = new HttpClient(handler.GetPlatformSpecificHttpClient());
+#else
             _httpClient = new HttpClient(); 
+#endif
             _serializerOptions = new JsonSerializerOptions {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 WriteIndented = true
@@ -23,7 +28,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
         public async Task<List<Term>> RefreshTermsAsync()
         {
             Terms = new List<Term>();
-            var url = DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:5072" : "http://localhost:5072";
+            var url = DeviceInfo.Platform == DevicePlatform.Android ? "https://10.0.2.2:7151" : "http://localhost:5072";
             Uri uri = new Uri($"{url}/Term");
 
             try
@@ -39,7 +44,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
                 }
             }
             catch (Exception ex) {
-                Debug.WriteLine(@"\tERROR {0}", ex.Message);
+                Debug.WriteLine($"\tERROR {ex}", ex.Message);
             }
             return Terms; 
         }
