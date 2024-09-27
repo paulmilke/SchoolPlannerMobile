@@ -8,8 +8,10 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
     {
         HttpClient _httpClient;
         JsonSerializerOptions _serializerOptions;
+        
 
         public List<Term> Terms { get; private set; }
+        private readonly string url = "https://10.0.2.2:7151";
 
         public RestService() 
         {
@@ -25,10 +27,11 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             };
         }
 
+        
+
         public async Task<List<Term>> RefreshTermsAsync()
         {
             Terms = new List<Term>();
-            var url = DeviceInfo.Platform == DevicePlatform.Android ? "https://10.0.2.2:7151" : "http://localhost:5072";
             Uri uri = new Uri($"{url}/Term");
 
             try
