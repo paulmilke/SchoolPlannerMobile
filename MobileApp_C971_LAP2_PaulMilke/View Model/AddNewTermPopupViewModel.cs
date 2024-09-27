@@ -114,6 +114,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
                     //await _schoolDatabase.SaveTermAsync(newTerm);
                     RestService restApi = new RestService();
                     await restApi.SaveNewTermAsync(newTerm);
+                    WeakReferenceMessenger.Default.Send(new TermUpdateMessage());
                 }
 
             }
