@@ -1,5 +1,6 @@
 ﻿using MobileApp_C971_LAP2_PaulMilke.Models;
 using System.Diagnostics;
+using System.Text;
 using System.Text.Json;
 
 namespace MobileApp_C971_LAP2_PaulMilke.Services
@@ -8,8 +9,10 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
     {
         HttpClient _httpClient;
         JsonSerializerOptions _serializerOptions;
+        
 
         public List<Term> Terms { get; private set; }
+        private readonly string url = "https://10.0.2.2:7151";
 
         public RestService() 
         {
@@ -25,10 +28,11 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             };
         }
 
+        
+
         public async Task<List<Term>> RefreshTermsAsync()
         {
             Terms = new List<Term>();
-            var url = DeviceInfo.Platform == DevicePlatform.Android ? "https://10.0.2.2:7151" : "http://localhost:5072";
             Uri uri = new Uri($"{url}/Term");
 
             try
@@ -47,6 +51,24 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
                 Debug.WriteLine($"\tERROR {ex}", ex.Message);
             }
             return Terms; 
+        }
+
+        public async Task<bool> SaveNewTermAsync(Term newTerm)
+        {
+            Uri uri = new Uri($"{url}/Term");
+            string json = JsonSerializer.Serialize(newTerm);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await _httpClient.PostAsync(uri, content);
+            if (response.IsSuccessStatusCode)
+            {
+                return true; 
+            }
+            else
+            {
+                Debug.WriteLine($"Failed to add new term: {response.StatusCode}");
+                return false; 
+            }
         }
     }
 }
