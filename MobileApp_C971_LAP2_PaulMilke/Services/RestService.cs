@@ -1,4 +1,5 @@
 ﻿using MobileApp_C971_LAP2_PaulMilke.Models;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
@@ -67,6 +68,24 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             else
             {
                 Debug.WriteLine($"Failed to add new term: {response.StatusCode}");
+                return false; 
+            }
+        }
+
+        public async Task<bool> UpdateExistingTermAsync(Term updatedTerm)
+        {
+            Uri uri = new Uri($"{url}/Term");
+            string json = JsonSerializer.Serialize(updatedTerm);
+            var content = new StringContent(json, Encoding.UTF8, "application/json"); 
+
+            HttpResponseMessage response = await _httpClient.PutAsync(uri, content); 
+            if (response.IsSuccessStatusCode)
+            {
+                return true; 
+            }
+            else
+            {
+                Debug.WriteLine($"Failed to update term: {response.StatusCode}");
                 return false; 
             }
         }
