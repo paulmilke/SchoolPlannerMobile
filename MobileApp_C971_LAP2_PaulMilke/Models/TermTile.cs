@@ -160,7 +160,10 @@ namespace MobileApp_C971_LAP2_PaulMilke.Models
                     TileCommand?.Execute(TermData.Id); 
                     break;
                 case "Delete":
-                    await schoolDatabase.DeleteTermAsync(TermData);
+                    //await schoolDatabase.DeleteTermAsync(TermData);
+                    RestService restService = new RestService();
+                    await restService.DeleteTermAsync(TermData.Id);
+                    WeakReferenceMessenger.Default.Send(new TermUpdateMessage()); 
                     break; 
             }
         }
