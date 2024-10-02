@@ -89,5 +89,21 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
                 return false; 
             }
         }
+
+        public async Task<bool> DeleteTermAsync(int termId)
+        {
+            Uri uri = new Uri($"{url}/Term?TermId={termId}");
+
+            HttpResponseMessage response = await _httpClient.DeleteAsync(uri); 
+            if (response.IsSuccessStatusCode)
+            {
+                return true; 
+            }
+            else
+            {
+                Debug.WriteLine($"Failed to update term: {response.StatusCode}");
+                return false;
+            }
+        }
     }
 }
