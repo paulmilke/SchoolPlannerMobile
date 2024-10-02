@@ -14,6 +14,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
         private SchoolDatabase _schoolDatabase;
         public ICommand AddTermCommand { get; set; }
         private Term currentTerm;
+        RestService restApi = new RestService();
         public AddNewTermPopupViewModel()
         {
             Initialize();
@@ -104,7 +105,9 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
                     currentTerm.Start = StartDate;
                     currentTerm.End = EndDate;
 
-                    await _schoolDatabase.SaveTermAsync(currentTerm);
+                    //await _schoolDatabase.SaveTermAsync(currentTerm);
+                    await restApi.UpdateExistingTermAsync(currentTerm);
+                    WeakReferenceMessenger.Default.Send(new TermUpdateMessage());
 
 
                 }
@@ -112,7 +115,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
                 {
                     Term newTerm = new Term(titleText, startDate, endDate);
                     //await _schoolDatabase.SaveTermAsync(newTerm);
-                    RestService restApi = new RestService();
+
                     await restApi.SaveNewTermAsync(newTerm);
                     WeakReferenceMessenger.Default.Send(new TermUpdateMessage());
                 }
