@@ -185,6 +185,32 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             }
         }
 
+        public async Task<bool> UpdateCurrentClassAsync(Class currentClass)
+        {
+            Uri uri = new Uri($"{url}/Class");
+            var json = JsonSerializer.Serialize(currentClass, _serializerOptions);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            try
+            {
+                HttpResponseMessage response = await _httpClient.PutAsync(uri, content);
+                if (response.IsSuccessStatusCode)
+                {
+                    return true; 
+                }
+                else
+                {
+                    Debug.WriteLine("Didn't update class properly");
+                    return false; 
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return false; 
+            }
+        }
+
         public async Task<bool> DeleteClassAsync(int classId)
         {
             Uri uri = new Uri($"{url}/Class?ClassId={classId}");
@@ -207,6 +233,8 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
                 return false;
             }
         }
+
+
     }
 }
  

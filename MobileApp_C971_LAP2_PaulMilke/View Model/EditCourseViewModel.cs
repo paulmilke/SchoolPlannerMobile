@@ -184,9 +184,14 @@ public class EditCourseViewModel : BaseViewModel
         if (ValidateEntryValues() == true)
 		{
 
-            await schoolDatabase.SaveClassAsync(CurrentClass);
-            ToggleEditCommand.Execute(this);
-            await ScheduleClassNotificationAsync();
+			//await schoolDatabase.SaveClassAsync(CurrentClass);
+			RestService restApi = new RestService(); 
+			var updated = await restApi.UpdateCurrentClassAsync(CurrentClass);
+			if (updated)
+			{
+                ToggleEditCommand.Execute(this);
+                await ScheduleClassNotificationAsync();
+            }
         }
 		else
 		{
