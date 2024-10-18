@@ -1,18 +1,12 @@
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.Maui.ApplicationModel.Communication;
 using MobileApp_C971_LAP2_PaulMilke.Models;
 using MobileApp_C971_LAP2_PaulMilke.Services;
 using MobileApp_C971_LAP2_PaulMilke.Views;
 using Plugin.LocalNotification;
 using System.Collections.ObjectModel;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
-using Microsoft.Maui.ApplicationModel.DataTransfer;
 
 
 namespace MobileApp_C971_LAP2_PaulMilke.View_Model;
@@ -132,7 +126,9 @@ public class EditCourseViewModel : BaseViewModel
 	public async Task LoadClassInfo()
 	{
 		AssessmentTiles.Clear();
-		CurrentClass = await schoolDatabase.GetSingleClass(ClassID);
+		//CurrentClass = await schoolDatabase.GetSingleClass(ClassID);
+		RestService restApi = new RestService();
+		CurrentClass = await restApi.GetSingleClassAsync(ClassID); 
         UpdateBindedProperties();
 
         var list = await schoolDatabase.GetAssessmentsAsync(ClassID);
