@@ -10,12 +10,13 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
     {
         HttpClient _httpClient;
         JsonSerializerOptions _serializerOptions;
-        
+
 
         public List<Term> Terms { get; private set; }
+        public List<Class> Classes { get; private set; }
         private readonly string url = "https://10.0.2.2:7151";
 
-        public RestService() 
+        public RestService()
         {
 #if DEBUG
             HttpClientService handler = new HttpClientService();
@@ -29,7 +30,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             };
         }
 
-        
+
 
         public async Task<List<Term>> RefreshTermsAsync()
         {
@@ -38,9 +39,9 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
 
             try
             {
-               HttpResponseMessage response = await _httpClient.GetAsync(uri);
+                HttpResponseMessage response = await _httpClient.GetAsync(uri);
                 if (response.IsSuccessStatusCode) {
-                    string responseString = await response.Content.ReadAsStringAsync(); 
+                    string responseString = await response.Content.ReadAsStringAsync();
                     Terms = JsonSerializer.Deserialize<List<Term>>(responseString, _serializerOptions);
                 }
                 else
@@ -51,7 +52,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             catch (Exception ex) {
                 Debug.WriteLine($"\tERROR {ex}", ex.Message);
             }
-            return Terms; 
+            return Terms;
         }
 
         public async Task<bool> SaveNewTermAsync(Term newTerm)
@@ -63,12 +64,12 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             HttpResponseMessage response = await _httpClient.PostAsync(uri, content);
             if (response.IsSuccessStatusCode)
             {
-                return true; 
+                return true;
             }
             else
             {
                 Debug.WriteLine($"Failed to add new term: {response.StatusCode}");
-                return false; 
+                return false;
             }
         }
 
@@ -76,28 +77,12 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
         {
             Uri uri = new Uri($"{url}/Term");
             string json = JsonSerializer.Serialize(updatedTerm);
-            var content = new StringContent(json, Encoding.UTF8, "application/json"); 
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = await _httpClient.PutAsync(uri, content); 
+            HttpResponseMessage response = await _httpClient.PutAsync(uri, content);
             if (response.IsSuccessStatusCode)
             {
-                return true; 
-            }
-            else
-            {
-                Debug.WriteLine($"Failed to update term: {response.StatusCode}");
-                return false; 
-            }
-        }
-
-        public async Task<bool> DeleteTermAsync(int termId)
-        {
-            Uri uri = new Uri($"{url}/Term?TermId={termId}");
-
-            HttpResponseMessage response = await _httpClient.DeleteAsync(uri); 
-            if (response.IsSuccessStatusCode)
-            {
-                return true; 
+                return true;
             }
             else
             {
@@ -105,5 +90,100 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
                 return false;
             }
         }
+
+        public async Task<bool> DeleteTermAsync(int termId)
+        {
+            Uri uri = new Uri($"{url}/Term?TermId={termId}");
+
+            HttpResponseMessage response = await _httpClient.DeleteAsync(uri);
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            else
+            {
+                Debug.WriteLine($"Failed to update term: {response.StatusCode}");
+                return false;
+            }
+        }
+
+        public async Task<Term> GetSingleTermAsync(int termId)
+        {
+            Uri uri = new Uri($"{url}/Term?TermId={termId}"); 
+            HttpResponseMessage response = await _httpClient.GetAsync(uri);
+            var responseString = await response.Content.ReadAsStringAsync();
+            var term = JsonSerializer.Deserialize<Term>(responseString, _serializerOptions);
+            return term; 
+        }
+
+        public async Task<List<Class>> GetClassesAsync(int termId)
+        {
+            Classes = new List<Class>();
+            Uri uri = new Uri($"{url}/Class?TermId={termId}");
+            HttpResponseMessage response = await _httpClient.GetAsync(uri);
+
+            try
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    string content = await response.Content.ReadAsStringAsync();
+                    Classes = JsonSerializer.Deserialize<List<Class>>(content, _serializerOptions);
+                }
+                else
+                {
+                    Debug.WriteLine($"Failed to load terms: {response.StatusCode}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            return Classes;
+        }
+
+        public async Task<Class> GetSingleClassAsync(int classId)
+        {
+            try
+            {
+                Uri uri = new Uri($"{url}/Class/{classId}");
+
+                HttpResponseMessage response = await _httpClient.GetAsync(uri);
+                if (response.IsSuccessStatusCode)
+                {
+                    var singleClassContent = await response.Content.ReadAsStringAsync();
+                    var singleClass = JsonSerializer.Deserialize<Class>(singleClassContent, _serializerOptions);
+                    return singleClass;
+                }
+                else
+                {
+                    return null; 
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message); 
+                return null; 
+            }
+
+        }
+
+        public async Task<bool> SaveNewClassAsync(Class newClass)
+        {
+            Uri uri = new Uri($"{url}/Class"); 
+            string json = JsonSerializer.Serialize(newClass, _serializerOptions);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await _httpClient.PostAsync(uri, content);
+
+            if (response.IsSuccessStatusCode) 
+            {
+                return true; 
+            }
+            else
+            {
+                return false; 
+            }
+        }
     }
 }
+ 
