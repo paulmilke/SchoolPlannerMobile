@@ -1,19 +1,16 @@
 ﻿using SQLite;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace MobileApp_C971_LAP2_PaulMilke.Models
 {
     public class Class
     {
-        [PrimaryKey, AutoIncrement]
+        [PrimaryKey]
+        [JsonPropertyName("classId")]
         public int Id { get; set; }
 
         [Indexed]
+        [JsonPropertyName("termId")]
         public int TermId { get; set; }
         
         public string ClassName { get; set; }

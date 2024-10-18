@@ -88,7 +88,9 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
         public async Task InitializeAsync()
         {
             await RefreshTiles();
-            Term currentTerm = await schoolDatabase.GetSingleTermAsync(TermId);
+            //Term currentTerm = await schoolDatabase.GetSingleTermAsync(TermId);
+            RestService restApi = new RestService();
+            var currentTerm = await restApi.GetSingleTermAsync(TermId);
             TermTitle = currentTerm.Title;
             TermStart = currentTerm.Start;
             TermEnd = currentTerm.End;  
@@ -97,7 +99,10 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
         public async Task RefreshTiles()
         {
             ClassList.Clear();
-            var list = await schoolDatabase.GetClassesAsync(TermId);
+            //var list = await schoolDatabase.GetClassesAsync(TermId);
+            RestService restApi = new RestService(); 
+            var list = await restApi.GetClassesAsync(TermId);
+
             foreach ( var item in list)
             {
                 ClassTile newTile = new ClassTile { ClassData = item };
@@ -124,7 +129,9 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
         public async Task CreateNewClass()
         {
             Class newClass = new Class(TermId, "New Class");
-            await schoolDatabase.SaveClassAsync(newClass);
+            //await schoolDatabase.SaveClassAsync(newClass);
+            RestService restApi = new RestService();
+            await restApi.SaveNewClassAsync(newClass);
             await RefreshTiles();
         }
 

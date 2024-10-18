@@ -1,18 +1,12 @@
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.Maui.ApplicationModel.Communication;
 using MobileApp_C971_LAP2_PaulMilke.Models;
 using MobileApp_C971_LAP2_PaulMilke.Services;
 using MobileApp_C971_LAP2_PaulMilke.Views;
 using Plugin.LocalNotification;
 using System.Collections.ObjectModel;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
-using Microsoft.Maui.ApplicationModel.DataTransfer;
 
 
 namespace MobileApp_C971_LAP2_PaulMilke.View_Model;
@@ -132,7 +126,9 @@ public class EditCourseViewModel : BaseViewModel
 	public async Task LoadClassInfo()
 	{
 		AssessmentTiles.Clear();
-		CurrentClass = await schoolDatabase.GetSingleClass(ClassID);
+		//CurrentClass = await schoolDatabase.GetSingleClass(ClassID);
+		RestService restApi = new RestService();
+		CurrentClass = await restApi.GetSingleClassAsync(ClassID); 
         UpdateBindedProperties();
 
         var list = await schoolDatabase.GetAssessmentsAsync(ClassID);
@@ -188,9 +184,14 @@ public class EditCourseViewModel : BaseViewModel
         if (ValidateEntryValues() == true)
 		{
 
-            await schoolDatabase.SaveClassAsync(CurrentClass);
-            ToggleEditCommand.Execute(this);
-            await ScheduleClassNotificationAsync();
+			//await schoolDatabase.SaveClassAsync(CurrentClass);
+			RestService restApi = new RestService(); 
+			var updated = await restApi.UpdateCurrentClassAsync(CurrentClass);
+			if (updated)
+			{
+                ToggleEditCommand.Execute(this);
+                await ScheduleClassNotificationAsync();
+            }
         }
 		else
 		{
@@ -332,8 +333,13 @@ public class EditCourseViewModel : BaseViewModel
 
         var snackbar = Snackbar.Make("Are you sure you want to delete this item?", async() => 
 			{
-				await schoolDatabase.DeleteClassAsync(currentClass);
-				await Shell.Current.Navigation.PopAsync(); 
+				//await schoolDatabase.DeleteClassAsync(currentClass);
+				RestService restApi = new RestService();
+				var delete = await restApi.DeleteClassAsync(currentClass.Id);
+				if (delete)
+				{
+                    await Shell.Current.Navigation.PopAsync();
+                }
 			}, "Delete", TimeSpan.FromSeconds(5),
 			snackbarOptions);
 		await snackbar.Show();
