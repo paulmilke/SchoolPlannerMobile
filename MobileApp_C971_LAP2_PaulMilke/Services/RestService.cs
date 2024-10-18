@@ -184,6 +184,29 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
                 return false; 
             }
         }
+
+        public async Task<bool> DeleteClassAsync(int classId)
+        {
+            Uri uri = new Uri($"{url}/Class?ClassId={classId}");
+
+            try
+            {
+                HttpResponseMessage response = await _httpClient.DeleteAsync(uri);
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"{ex.Message}");
+                return false;
+            }
+        }
     }
 }
  

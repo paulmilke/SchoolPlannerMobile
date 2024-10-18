@@ -328,8 +328,13 @@ public class EditCourseViewModel : BaseViewModel
 
         var snackbar = Snackbar.Make("Are you sure you want to delete this item?", async() => 
 			{
-				await schoolDatabase.DeleteClassAsync(currentClass);
-				await Shell.Current.Navigation.PopAsync(); 
+				//await schoolDatabase.DeleteClassAsync(currentClass);
+				RestService restApi = new RestService();
+				var delete = await restApi.DeleteClassAsync(currentClass.Id);
+				if (delete)
+				{
+                    await Shell.Current.Navigation.PopAsync();
+                }
 			}, "Delete", TimeSpan.FromSeconds(5),
 			snackbarOptions);
 		await snackbar.Show();
