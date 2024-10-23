@@ -3,43 +3,34 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using MobileApp_C971_LAP2_PaulMilke.Views;
 using MobileApp_C971_LAP2_PaulMilke.Models;
-using System.Collections.Generic;
 using CommunityToolkit.Mvvm.Messaging;
+using MobileApp_C971_LAP2_PaulMilke.Interfaces;
 
 namespace MobileApp_C971_LAP2_PaulMilke.View_Model
 {
-
     public class MainPageViewModel : BaseViewModel
     {
-        private readonly SchoolDatabase _schoolDatabase;
+        private readonly IRestService _restService;
         public ObservableCollection<TermTile> TermList { get; set; } = new ObservableCollection<TermTile>();
 
-        public MainPageViewModel(INavigationService navigationService) : base(navigationService)
+        public MainPageViewModel(INavigationService navigationService, IRestService restService) : base(navigationService)
         {
-            _schoolDatabase = new SchoolDatabase();
-            InitAsync().ConfigureAwait(false);
-
+            _restService = restService;
             WeakReferenceMessenger.Default.Register<TermUpdateMessage>(this, async (recipient, message) =>
             {
                 await RefreshTiles();
             });
         }
 
-
-    
-
-        private async Task InitAsync()
+        public async Task OnNavigatedToAsync()
         {
             await RefreshTiles(); 
-
         }
 
         private async Task RefreshTiles()
         {
             TermList.Clear(); 
-            //var terms = await _schoolDatabase.GetTermsAsync();
-            RestService restApi = new RestService();
-            var terms = await restApi.RefreshTermsAsync(); 
+            var terms = await _restService.RefreshTermsAsync(); 
 
             foreach (Term term in terms)
             {

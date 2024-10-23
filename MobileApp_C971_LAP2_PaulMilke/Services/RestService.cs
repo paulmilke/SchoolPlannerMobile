@@ -1,12 +1,12 @@
 ﻿using MobileApp_C971_LAP2_PaulMilke.Models;
-using System.ComponentModel;
+using MobileApp_C971_LAP2_PaulMilke.Interfaces; 
 using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 
 namespace MobileApp_C971_LAP2_PaulMilke.Services
 {
-    internal class RestService
+    public class RestService : IRestService
     {
         HttpClient _httpClient;
         JsonSerializerOptions _serializerOptions;

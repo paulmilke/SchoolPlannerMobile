@@ -5,6 +5,7 @@ using CommunityToolkit.Maui.Markup;
 using MobileApp_C971_LAP2_PaulMilke.Services;
 using MobileApp_C971_LAP2_PaulMilke.View_Model;
 using MobileApp_C971_LAP2_PaulMilke.Views;
+using MobileApp_C971_LAP2_PaulMilke.Interfaces;
 
 namespace MobileApp_C971_LAP2_PaulMilke
 {
@@ -26,8 +27,8 @@ namespace MobileApp_C971_LAP2_PaulMilke
 
             //Registers singleton of INavigationService. Singleton means will last life of app session. 
             builder.Services.AddSingleton<INavigationService, NavigationService>();
-
             builder.Services.AddSingleton<Services.INotificationService, NotificationService>();
+            builder.Services.AddSingleton<IRestService, RestService>(); 
 
             //Registers the CoursePage and corresponding CoursesViewModel as Transient. Meaning it resolves upon leaving the page and loads new the next time. 
             builder.Services.AddTransient<CoursesPage>();
@@ -46,6 +47,9 @@ namespace MobileApp_C971_LAP2_PaulMilke
             builder.Services.AddTransient<ReportsViewModel>();  
 
             builder.Services.AddTransient<AddNewTermPopupViewModel>();
+
+            builder.Services.AddTransient<MainPage>();
+            builder.Services.AddTransient<MainPageViewModel>(); 
 
             //Register the sigleton for our local database called SchoolDatabase. 
             builder.Services.AddSingleton<SchoolDatabase>();

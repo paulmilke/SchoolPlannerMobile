@@ -3,23 +3,29 @@ using CommunityToolkit.Mvvm.Messaging;
 using MobileApp_C971_LAP2_PaulMilke.Services;
 using MobileApp_C971_LAP2_PaulMilke.View_Model;
 using MobileApp_C971_LAP2_PaulMilke.Views;
-using MobileApp_C971_LAP2_PaulMilke.Models;
 
 namespace MobileApp_C971_LAP2_PaulMilke
 {
     public partial class MainPage : ContentPage
     {
+        MainPageViewModel ViewModel => (MainPageViewModel)BindingContext;
 
-        public MainPage()
+        public MainPage(MainPageViewModel viewModel)
         {
-            //Initialized mainpage and binds with MainPageViewModel while creating new navigationService. 
+            //Initialized mainpage and binds with MainPageViewModel. 
             InitializeComponent();
-            BindingContext = new MainPageViewModel(new NavigationService());
+            BindingContext = viewModel;
 
             WeakReferenceMessenger.Default.Register<EditTermMessage>(this, (recipient, message) =>
             {
                 this.ShowPopup(new AddNewTermPopup(new AddNewTermPopupViewModel(message.UpdatedTerm)));
             });
+        }
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            await ViewModel.OnNavigatedToAsync(); 
         }
 
         private void OnAddClicked(object sender, EventArgs e)
