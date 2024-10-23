@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using MobileApp_C971_LAP2_PaulMilke.Interfaces;
 using MobileApp_C971_LAP2_PaulMilke.Models;
 using MobileApp_C971_LAP2_PaulMilke.Services;
 using MobileApp_C971_LAP2_PaulMilke.Views;
@@ -10,7 +11,8 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
     [QueryProperty(nameof(TermId), "OBJECTID")]
     public class CoursesViewModel : BaseViewModel
     {
-        SchoolDatabase schoolDatabase;
+        private readonly IRestService _restService;
+
         private int _termId;
         public int TermId
         {
@@ -80,17 +82,16 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
 
         public ObservableCollection<ClassTile> ClassList { get; set; } = new ObservableCollection<ClassTile>();
 
-        public CoursesViewModel(INavigationService navigationService) : base(navigationService)
+        public CoursesViewModel(INavigationService navigationService, IRestService restService) : base(navigationService)
         {
-            schoolDatabase = new SchoolDatabase();
+            _restService = restService;
         }
 
-        public async Task InitializeAsync()
+        public async Task OnNavigatedToAsync()
         {
             await RefreshTiles();
-            //Term currentTerm = await schoolDatabase.GetSingleTermAsync(TermId);
-            RestService restApi = new RestService();
-            var currentTerm = await restApi.GetSingleTermAsync(TermId);
+
+            var currentTerm = await _restService.GetSingleTermAsync(TermId);
             TermTitle = currentTerm.Title;
             TermStart = currentTerm.Start;
             TermEnd = currentTerm.End;  
@@ -99,10 +100,8 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
         public async Task RefreshTiles()
         {
             ClassList.Clear();
-            //var list = await schoolDatabase.GetClassesAsync(TermId);
-            RestService restApi = new RestService(); 
-            var list = await restApi.GetClassesAsync(TermId);
 
+            var list = await _restService.GetClassesAsync(TermId); 
             foreach ( var item in list)
             {
                 ClassTile newTile = new ClassTile { ClassData = item };
@@ -129,9 +128,8 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
         public async Task CreateNewClass()
         {
             Class newClass = new Class(TermId, "New Class");
-            //await schoolDatabase.SaveClassAsync(newClass);
-            RestService restApi = new RestService();
-            await restApi.SaveNewClassAsync(newClass);
+
+            await _restService.SaveNewClassAsync(newClass);
             await RefreshTiles();
         }
 
