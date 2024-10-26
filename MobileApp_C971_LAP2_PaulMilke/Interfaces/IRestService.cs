@@ -17,5 +17,6 @@ namespace MobileApp_C971_LAP2_PaulMilke.Interfaces
         Task<List<Assessment>> GetAssessmentsAsync(int classId);
         Task<Assessment> GetSingleAssessmentAsync(int assessmentId);
         Task<bool> DeleteAssessmentAsync(int assessmentId); 
+        Task<bool> SaveAssessmentAsync(Assessment assessment);
     }
 }

@@ -140,7 +140,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
             }
             else
             {
-                await schoolDatabase.SaveAssessmentAsync(CurrentAssessment);
+                await _restService.SaveAssessmentAsync(CurrentAssessment);
                 await ScheduleAssessmentNotificationsAsync();
                 await NavigateBack(); 
             }

@@ -283,6 +283,37 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             }
         }
 
+        public async Task<bool> SaveAssessmentAsync(Assessment assessment)
+        {
+            Uri uri = new Uri($"{url}/Assessment");
+            string json = JsonSerializer.Serialize(assessment, _serializerOptions);
+            var content = new StringContent(json, Encoding.UTF8, "application/json"); 
+
+            if(assessment.Id == 0)
+            {
+                HttpResponseMessage response = await _httpClient.PostAsync(uri, content);
+                if (response.IsSuccessStatusCode){
+                    return true;
+                }
+                else
+                {
+                    return false; 
+                }
+            }
+            else
+            {
+                HttpResponseMessage response = await _httpClient.PutAsync(uri, content);
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
     }
 }
  
