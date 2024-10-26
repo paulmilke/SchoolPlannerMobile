@@ -250,6 +250,24 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             }
         }
 
+        public async Task<Assessment> GetSingleAssessmentAsync(int assessmentId)
+        {
+            Uri uri = new Uri($"{url}/Assessment/{assessmentId}");
+            HttpResponseMessage response = await _httpClient.GetAsync(uri); 
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var assessment = JsonSerializer.Deserialize<Assessment>(json, _serializerOptions); 
+
+                return assessment;
+            }
+            else
+            {
+                return new Assessment();
+            }
+        }
+
 
     }
 }
