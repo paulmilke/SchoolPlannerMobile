@@ -6,12 +6,14 @@ using MobileApp_C971_LAP2_PaulMilke.Models;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace MobileApp_C971_LAP2_PaulMilke.Models
 {
     public class Assessment
     {
         [PrimaryKey, AutoIncrement]
+        [JsonPropertyName("assessmentId")]
         public int Id { get; set; }
 
         [Indexed]
