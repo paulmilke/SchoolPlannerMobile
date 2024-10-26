@@ -234,6 +234,22 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             }
         }
 
+        public async Task<List<Assessment>> GetAssessmentsAsync(int classId)
+        {
+            Uri uri = new Uri($"{url}/Assessment?ClassId={classId}"); 
+            HttpResponseMessage response = await _httpClient.GetAsync(uri);
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var assessments = JsonSerializer.Deserialize<List<Assessment>>(json, _serializerOptions); 
+                return assessments;
+            }
+            else
+            {
+                return new List<Assessment>();
+            }
+        }
+
 
     }
 }
