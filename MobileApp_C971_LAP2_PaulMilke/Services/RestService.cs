@@ -268,6 +268,20 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             }
         }
 
+        public async Task<bool> DeleteAssessmentAsync(int assessmentId)
+        {
+            Uri uri = new Uri($"{url}/Assessment?AssessmentId={assessmentId}");
+            HttpResponseMessage response = await _httpClient.DeleteAsync(uri);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return true; 
+            }
+            else
+            {
+                return false; 
+            }
+        }
 
     }
 }
