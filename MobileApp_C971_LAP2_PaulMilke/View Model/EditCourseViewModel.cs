@@ -1,5 +1,6 @@
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using MobileApp_C971_LAP2_PaulMilke.Interfaces;
 using MobileApp_C971_LAP2_PaulMilke.Models;
 using MobileApp_C971_LAP2_PaulMilke.Services;
 using MobileApp_C971_LAP2_PaulMilke.Views;
@@ -16,6 +17,7 @@ public class EditCourseViewModel : BaseViewModel
 {
 	SchoolDatabase schoolDatabase; 
 	private readonly Services.INotificationService notificationService;
+	private readonly IRestService _restService; 
 
 	public ObservableCollection<AssessmentTile> AssessmentTiles { get; set; } = new ObservableCollection<AssessmentTile>();
 
@@ -85,10 +87,11 @@ public class EditCourseViewModel : BaseViewModel
 		}
     }
 
-	public EditCourseViewModel(INavigationService _navigationService, Services.INotificationService _notificationService) : base(_navigationService)
+	public EditCourseViewModel(INavigationService _navigationService, Services.INotificationService _notificationService, IRestService restService) : base(_navigationService)
 	{
 		schoolDatabase = new SchoolDatabase();
 		notificationService = _notificationService;
+		_restService = restService;
 
         ToggleEditCommand = new Command(() => IsEditing = !IsEditing);
 		UpdateClassCommand = new Command(async () => await UpdateClass());
@@ -117,7 +120,7 @@ public class EditCourseViewModel : BaseViewModel
     }
 
 
-    public async Task InitializeAsync()
+    public async Task OnNavigatedToAsync()
 	{
 		await LoadClassInfo();
 
@@ -127,16 +130,16 @@ public class EditCourseViewModel : BaseViewModel
 	{
 		AssessmentTiles.Clear();
 		//CurrentClass = await schoolDatabase.GetSingleClass(ClassID);
-		RestService restApi = new RestService();
-		CurrentClass = await restApi.GetSingleClassAsync(ClassID); 
+		CurrentClass = await _restService.GetSingleClassAsync(ClassID); 
         UpdateBindedProperties();
 
-        var list = await schoolDatabase.GetAssessmentsAsync(ClassID);
+		//var list = await schoolDatabase.GetAssessmentsAsync(ClassID);
+		var assessmentList = await _restService.GetAssessmentsAsync(ClassID); 
 
         IsPerformance = true;
         IsObjective = true;
 
-        foreach (var item in list)
+        foreach (var item in assessmentList)
 		{
 			AssessmentTile newTile = new AssessmentTile { AssessmentData = item };
 			AssessmentTiles.Add(newTile);
@@ -185,8 +188,7 @@ public class EditCourseViewModel : BaseViewModel
 		{
 
 			//await schoolDatabase.SaveClassAsync(CurrentClass);
-			RestService restApi = new RestService(); 
-			var updated = await restApi.UpdateCurrentClassAsync(CurrentClass);
+			var updated = await _restService.UpdateCurrentClassAsync(CurrentClass);
 			if (updated)
 			{
                 ToggleEditCommand.Execute(this);
@@ -334,8 +336,7 @@ public class EditCourseViewModel : BaseViewModel
         var snackbar = Snackbar.Make("Are you sure you want to delete this item?", async() => 
 			{
 				//await schoolDatabase.DeleteClassAsync(currentClass);
-				RestService restApi = new RestService();
-				var delete = await restApi.DeleteClassAsync(currentClass.Id);
+				var delete = await _restService.DeleteClassAsync(currentClass.Id);
 				if (delete)
 				{
                     await Shell.Current.Navigation.PopAsync();
