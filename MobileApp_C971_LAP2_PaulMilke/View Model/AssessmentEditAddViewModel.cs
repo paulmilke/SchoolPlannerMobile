@@ -118,7 +118,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
 
         public async Task DeleteAssessment()
         {
-            await schoolDatabase.DeleteAssessmentAsync(CurrentAssessment);
+            await _restService.DeleteAssessmentAsync(CurrentAssessment.Id); 
             await NavigateBack(); 
         }
 
