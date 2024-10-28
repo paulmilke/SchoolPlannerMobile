@@ -1,13 +1,8 @@
 ﻿using MobileApp_C971_LAP2_PaulMilke.Services;
 using MobileApp_C971_LAP2_PaulMilke.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Plugin.LocalNotification;
-using CommunityToolkit.Mvvm.Messaging;
+using MobileApp_C971_LAP2_PaulMilke.Interfaces;
 
 namespace MobileApp_C971_LAP2_PaulMilke.View_Model
 {
@@ -17,6 +12,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
     [QueryProperty(nameof(AssessmentID), "OBJECTID")]
     public class AssessmentEditAddViewModel : BaseViewModel
     {
+        IRestService _restService; 
         SchoolDatabase schoolDatabase;
         private readonly Services.INotificationService notificationService;
         public ICommand AddAssessmentCommand { get; }
@@ -80,27 +76,27 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
         }
 
 
-        public AssessmentEditAddViewModel(INavigationService navigationService, Services.INotificationService _notificationService) : base(navigationService) 
+        public AssessmentEditAddViewModel(INavigationService navigationService, Services.INotificationService _notificationService, IRestService restService) : base(navigationService) 
         {
+            _restService = restService;
             schoolDatabase = new SchoolDatabase();
             notificationService = _notificationService;
             currentAssessment = new Assessment();
             AddAssessmentCommand = new Command(async () => await AddAssessment());
             EditAssessmentCommand = new Command(SwapIsAdding);
             DeleteAssessmentCommand = new Command(async () => await DeleteAssessment());
-            SetValues();
         }
 
-        public void InitializeAsync()
+        public async Task OnNavigatedToAsync()
         {
-            SetValues();
+            await SetValues();
         }
 
-        private async void SetValues()
+        private async Task SetValues()
         {
             if(AssessmentID != 0) 
             {
-                CurrentAssessment = await schoolDatabase.GetSingleAssessmentAsync(AssessmentID);
+                CurrentAssessment = await _restService.GetSingleAssessmentAsync(AssessmentID); 
                 ClassID = CurrentAssessment.ClassId;
                 AssessmentName = CurrentAssessment.AssessmentName; 
                 AssessmentType = CurrentAssessment.AssessmentType;  
@@ -122,7 +118,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
 
         public async Task DeleteAssessment()
         {
-            await schoolDatabase.DeleteAssessmentAsync(CurrentAssessment);
+            await _restService.DeleteAssessmentAsync(CurrentAssessment.Id); 
             await NavigateBack(); 
         }
 
@@ -144,7 +140,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.View_Model
             }
             else
             {
-                await schoolDatabase.SaveAssessmentAsync(CurrentAssessment);
+                await _restService.SaveAssessmentAsync(CurrentAssessment);
                 await ScheduleAssessmentNotificationsAsync();
                 await NavigateBack(); 
             }

@@ -5,20 +5,17 @@ namespace MobileApp_C971_LAP2_PaulMilke.Views;
 
 public partial class AssessmentEditAdd : ContentPage
 {
+	AssessmentEditAddViewModel ViewModel => (AssessmentEditAddViewModel)BindingContext; 
 	public AssessmentEditAdd(AssessmentEditAddViewModel viewModel)
 	{
 		InitializeComponent();
-		this.BindingContext = viewModel;
+		BindingContext = viewModel;
 	}
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
-        var viewModel = BindingContext as AssessmentEditAddViewModel;
-        if (viewModel != null)
-        {
-            viewModel.InitializeAsync();
-        }
+		await ViewModel.OnNavigatedToAsync(); 
     }
 
 }

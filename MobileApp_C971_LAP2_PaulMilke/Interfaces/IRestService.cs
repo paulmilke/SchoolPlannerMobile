@@ -14,5 +14,9 @@ namespace MobileApp_C971_LAP2_PaulMilke.Interfaces
         Task<bool> SaveNewClassAsync(Class newClass);
         Task<bool> UpdateCurrentClassAsync(Class currentClass);
         Task<bool> DeleteClassAsync(int classId);
+        Task<List<Assessment>> GetAssessmentsAsync(int classId);
+        Task<Assessment> GetSingleAssessmentAsync(int assessmentId);
+        Task<bool> DeleteAssessmentAsync(int assessmentId); 
+        Task<bool> SaveAssessmentAsync(Assessment assessment);
     }
 }

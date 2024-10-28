@@ -234,6 +234,85 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
             }
         }
 
+        public async Task<List<Assessment>> GetAssessmentsAsync(int classId)
+        {
+            Uri uri = new Uri($"{url}/Assessment?ClassId={classId}"); 
+            HttpResponseMessage response = await _httpClient.GetAsync(uri);
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var assessments = JsonSerializer.Deserialize<List<Assessment>>(json, _serializerOptions); 
+                return assessments;
+            }
+            else
+            {
+                return new List<Assessment>();
+            }
+        }
+
+        public async Task<Assessment> GetSingleAssessmentAsync(int assessmentId)
+        {
+            Uri uri = new Uri($"{url}/Assessment/{assessmentId}");
+            HttpResponseMessage response = await _httpClient.GetAsync(uri); 
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var assessment = JsonSerializer.Deserialize<Assessment>(json, _serializerOptions); 
+
+                return assessment;
+            }
+            else
+            {
+                return new Assessment();
+            }
+        }
+
+        public async Task<bool> DeleteAssessmentAsync(int assessmentId)
+        {
+            Uri uri = new Uri($"{url}/Assessment?AssessmentId={assessmentId}");
+            HttpResponseMessage response = await _httpClient.DeleteAsync(uri);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return true; 
+            }
+            else
+            {
+                return false; 
+            }
+        }
+
+        public async Task<bool> SaveAssessmentAsync(Assessment assessment)
+        {
+            Uri uri = new Uri($"{url}/Assessment");
+            string json = JsonSerializer.Serialize(assessment, _serializerOptions);
+            var content = new StringContent(json, Encoding.UTF8, "application/json"); 
+
+            if(assessment.Id == 0)
+            {
+                HttpResponseMessage response = await _httpClient.PostAsync(uri, content);
+                if (response.IsSuccessStatusCode){
+                    return true;
+                }
+                else
+                {
+                    return false; 
+                }
+            }
+            else
+            {
+                HttpResponseMessage response = await _httpClient.PutAsync(uri, content);
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
 
     }
 }
