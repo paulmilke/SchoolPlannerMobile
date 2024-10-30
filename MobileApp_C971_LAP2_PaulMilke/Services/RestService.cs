@@ -14,7 +14,7 @@ namespace MobileApp_C971_LAP2_PaulMilke.Services
 
         public List<Term> Terms { get; private set; }
         public List<Class> Classes { get; private set; }
-        private readonly string url = "https://10.0.2.2:7151";
+        private readonly string url = "https://schoolplanner-gna2b9b8frd7e0bk.westus2-01.azurewebsites.net";
 
         public RestService()
         {
