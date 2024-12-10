@@ -7,7 +7,7 @@ This is a mobile application that I built for a school assignment. It was built 
 School Planner: 
 The school planner application allows users to plan out terms, courses, and assignments. The goal of which is to help them orgranize and stay on track when completing their education. Features include: 
 
-- Data is stored via server side API/Database on Azure. See my server side [project here!]([url](https://github.com/paulmilke/SchoolPlannerServer))
+- Data is stored and accessed via server side API/Database on Azure. You can see the server side project in my GitHub profile as well! 
 - Add, Edit, Delete Terms.
 - Add, Edit, Delete Classes per Term. 
 - Add, Edit, Delete two Assignments per Class. 
